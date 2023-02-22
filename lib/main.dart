@@ -1,115 +1,278 @@
-import 'package:flutter/material.dart';
+import 'dart:async';
+import 'dart:io';
 
-void main() {
-  runApp(const MyApp());
+import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_background_service/flutter_background_service.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_timezone/flutter_timezone.dart';
+import 'package:get_storage/get_storage.dart';
+import 'package:mybu/features/notification/controller/notification_controller.dart';
+import 'package:mybu/firebase_options.dart';
+import 'package:timezone/data/latest_all.dart' as tz;
+import 'package:timezone/timezone.dart' as tz;
+
+import 'features/bus_schedule/screen/bus_schedule_screen.dart';
+import 'features/home/screen/home_screen.dart';
+import 'theme/theme/app_theme.dart';
+
+final StreamController<ReceivedNotification> didReceiveLocalNotificationStream =
+    StreamController<ReceivedNotification>.broadcast();
+
+final StreamController<String?> selectNotificationStream =
+    StreamController<String?>.broadcast();
+
+class ReceivedNotification {
+  ReceivedNotification({
+    required this.id,
+    required this.title,
+    required this.body,
+    required this.payload,
+  });
+
+  final int id;
+  final String? title;
+  final String? body;
+  final String? payload;
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+String? selectedNotificationPayload;
 
-  // This widget is the root of your application.
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        // This is the theme of your application.
-        //
-        // Try running your application with "flutter run". You'll see the
-        // application has a blue toolbar. Then, without quitting the app, try
-        // changing the primarySwatch below to Colors.green and then invoke
-        // "hot reload" (press "r" in the console where you ran "flutter run",
-        // or simply save your changes to "hot reload" in a Flutter IDE).
-        // Notice that the counter didn't reset back to zero; the application
-        // is not restarted.
-        primarySwatch: Colors.blue,
-      ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
-    );
+/// A notification action which triggers a url launch event
+const String urlLaunchActionId = 'id_1';
+
+/// A notification action which triggers a App navigation event
+const String navigationActionId = 'id_3';
+
+/// Defines a iOS/MacOS notification category for text input actions.
+const String darwinNotificationCategoryText = 'textCategory';
+
+/// Defines a iOS/MacOS notification category for plain actions.
+const String darwinNotificationCategoryPlain = 'plainCategory';
+
+@pragma('vm:entry-point')
+void notificationTapBackground(NotificationResponse notificationResponse) {
+  // ignore: avoid_print
+  print('notification(${notificationResponse.id}) action tapped: '
+      '${notificationResponse.actionId} with'
+      ' payload: ${notificationResponse.payload}');
+  if (notificationResponse.input?.isNotEmpty ?? false) {
+    // ignore: avoid_print
+    print(
+        'notification action tapped with input: ${notificationResponse.input}');
   }
 }
 
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
-
-  // This widget is the home page of your application. It is stateful, meaning
-  // that it has a State object (defined below) that contains fields that affect
-  // how it looks.
-
-  // This class is the configuration for the state. It holds the values (in this
-  // case the title) provided by the parent (in this case the App widget) and
-  // used by the build method of the State. Fields in a Widget subclass are
-  // always marked "final".
-
-  final String title;
-
-  @override
-  State<MyHomePage> createState() => _MyHomePageState();
+Future<void> _configureLocalTimeZone() async {
+  if (kIsWeb || Platform.isLinux) {
+    return;
+  }
+  tz.initializeTimeZones();
+  final String? timeZoneName = await FlutterTimezone.getLocalTimezone();
+  tz.setLocalLocation(tz.getLocation(timeZoneName!));
 }
 
-class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
+int? installed;
 
-  void _incrementCounter() {
-    setState(() {
-      // This call to setState tells the Flutter framework that something has
-      // changed in this State, which causes it to rerun the build method below
-      // so that the display can reflect the updated values. If we changed
-      // _counter without calling setState(), then the build method would not be
-      // called again, and so nothing would appear to happen.
-      _counter++;
+FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+    FlutterLocalNotificationsPlugin();
+
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await initializeService();
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  await _configureLocalTimeZone();
+  await GetStorage.init();
+  installed = GetStorage().read("installed");
+  if (installed == null) {
+    GetStorage().write("schedules", <Map<String, dynamic>>[]);
+  }
+  if (GetStorage().read("notificationForRouteOne") == null) {
+    GetStorage().write("notificationForRouteOne", false);
+  }
+  if (GetStorage().read("notificationForRouteTwo") == null) {
+    GetStorage().write("notificationForRouteTwo", false);
+  }
+  if (GetStorage().read("notificationForRouteThree") == null) {
+    GetStorage().write("notificationForRouteThree", false);
+  }
+
+  final NotificationAppLaunchDetails? notificationAppLaunchDetails = !kIsWeb &&
+          Platform.isLinux
+      ? null
+      : await flutterLocalNotificationsPlugin.getNotificationAppLaunchDetails();
+  // String initialRoute = HomeScreen();
+  if (notificationAppLaunchDetails?.didNotificationLaunchApp ?? false) {
+    selectedNotificationPayload =
+        notificationAppLaunchDetails!.notificationResponse?.payload;
+    // initialRoute = SecondPage.routeName;
+  }
+
+  const AndroidInitializationSettings initializationSettingsAndroid =
+      AndroidInitializationSettings('launch_background');
+
+  final InitializationSettings initializationSettings = InitializationSettings(
+    android: initializationSettingsAndroid,
+    // iOS: initializationSettingsDarwin,
+    // macOS: initializationSettingsDarwin,
+    // linux: initializationSettingsLinux,
+  );
+
+  await flutterLocalNotificationsPlugin.initialize(
+    initializationSettings,
+    onDidReceiveNotificationResponse:
+        (NotificationResponse notificationResponse) {
+      switch (notificationResponse.notificationResponseType) {
+        case NotificationResponseType.selectedNotification:
+          selectNotificationStream.add(notificationResponse.payload);
+          break;
+        case NotificationResponseType.selectedNotificationAction:
+          if (notificationResponse.actionId == navigationActionId) {
+            selectNotificationStream.add(notificationResponse.payload);
+          }
+          break;
+      }
+    },
+    onDidReceiveBackgroundNotificationResponse: notificationTapBackground,
+  );
+
+  runApp(const ProviderScope(child: MyApp()));
+}
+
+class MyApp extends StatefulWidget {
+  const MyApp({Key? key, this.notificationAppLaunchDetails}) : super(key: key);
+
+  final NotificationAppLaunchDetails? notificationAppLaunchDetails;
+
+  bool get didNotificationLaunchApp =>
+      notificationAppLaunchDetails?.didNotificationLaunchApp ?? false;
+
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  bool _notificationsEnabled = false;
+  @override
+  void initState() {
+    _isAndroidPermissionGranted();
+    _requestPermissions();
+    _configureDidReceiveLocalNotificationSubject();
+    _configureSelectNotificationSubject();
+
+    super.initState();
+  }
+
+  Future<void> _isAndroidPermissionGranted() async {
+    if (Platform.isAndroid) {
+      final bool granted = await flutterLocalNotificationsPlugin
+              .resolvePlatformSpecificImplementation<
+                  AndroidFlutterLocalNotificationsPlugin>()
+              ?.areNotificationsEnabled() ??
+          false;
+
+      setState(() {
+        _notificationsEnabled = granted;
+      });
+    }
+  }
+
+  Future<void> _requestPermissions() async {
+    if (Platform.isIOS || Platform.isMacOS) {
+      await flutterLocalNotificationsPlugin
+          .resolvePlatformSpecificImplementation<
+              IOSFlutterLocalNotificationsPlugin>()
+          ?.requestPermissions(
+            alert: true,
+            badge: true,
+            sound: true,
+          );
+      await flutterLocalNotificationsPlugin
+          .resolvePlatformSpecificImplementation<
+              MacOSFlutterLocalNotificationsPlugin>()
+          ?.requestPermissions(
+            alert: true,
+            badge: true,
+            sound: true,
+          );
+    } else if (Platform.isAndroid) {
+      final AndroidFlutterLocalNotificationsPlugin? androidImplementation =
+          flutterLocalNotificationsPlugin.resolvePlatformSpecificImplementation<
+              AndroidFlutterLocalNotificationsPlugin>();
+
+      final bool? granted = await androidImplementation?.requestPermission();
+      setState(() {
+        _notificationsEnabled = granted ?? false;
+      });
+    }
+  }
+
+  void _configureDidReceiveLocalNotificationSubject() {
+    didReceiveLocalNotificationStream.stream
+        .listen((ReceivedNotification receivedNotification) async {
+      await showDialog(
+        context: context,
+        builder: (BuildContext context) => CupertinoAlertDialog(
+          title: receivedNotification.title != null
+              ? Text(receivedNotification.title!)
+              : null,
+          content: receivedNotification.body != null
+              ? Text(receivedNotification.body!)
+              : null,
+          actions: <Widget>[
+            CupertinoDialogAction(
+              isDefaultAction: true,
+              onPressed: () async {
+                Navigator.of(context, rootNavigator: true).pop();
+                await Navigator.of(context).push(
+                  MaterialPageRoute<void>(
+                    builder: (BuildContext context) =>
+                        BusScheduleScreen(payload: "payload"),
+                  ),
+                );
+              },
+              child: const Text('Ok'),
+            )
+          ],
+        ),
+      );
+    });
+  }
+
+  void _configureSelectNotificationSubject() {
+    selectNotificationStream.stream.listen((String? payload) async {
+      await Navigator.of(context).push(MaterialPageRoute<void>(
+        builder: (BuildContext context) => BusScheduleScreen(payload: payload),
+      ));
     });
   }
 
   @override
+  void dispose() {
+    didReceiveLocalNotificationStream.close();
+    selectNotificationStream.close();
+    super.dispose();
+  }
+
+  void onClickNotification(String? payload) => Navigator.push(
+      context,
+      CupertinoPageRoute(
+          builder: (context) => BusScheduleScreen(
+                payload: payload,
+              )));
+  @override
   Widget build(BuildContext context) {
-    // This method is rerun every time setState is called, for instance as done
-    // by the _incrementCounter method above.
-    //
-    // The Flutter framework has been optimized to make rerunning build methods
-    // fast, so that you can just rebuild anything that needs updating rather
-    // than having to individually change instances of widgets.
-    return Scaffold(
-      appBar: AppBar(
-        // Here we take the value from the MyHomePage object that was created by
-        // the App.build method, and use it to set our appbar title.
-        title: Text(widget.title),
-      ),
-      body: Center(
-        // Center is a layout widget. It takes a single child and positions it
-        // in the middle of the parent.
-        child: Column(
-          // Column is also a layout widget. It takes a list of children and
-          // arranges them vertically. By default, it sizes itself to fit its
-          // children horizontally, and tries to be as tall as its parent.
-          //
-          // Invoke "debug painting" (press "p" in the console, choose the
-          // "Toggle Debug Paint" action from the Flutter Inspector in Android
-          // Studio, or the "Toggle Debug Paint" command in Visual Studio Code)
-          // to see the wireframe for each widget.
-          //
-          // Column has various properties to control how it sizes itself and
-          // how it positions its children. Here we use mainAxisAlignment to
-          // center the children vertically; the main axis here is the vertical
-          // axis because Columns are vertical (the cross axis would be
-          // horizontal).
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            const Text(
-              'You have pushed the button this many times:',
-            ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headlineMedium,
-            ),
-          ],
-        ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
+    GetStorage().write("installed", 1);
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      title: 'My BU',
+      themeMode: ThemeMode.system,
+      theme: AppTheme.lightTheme,
+      darkTheme: AppTheme.darkTheme,
+      home: const HomeScreen(),
     );
   }
 }

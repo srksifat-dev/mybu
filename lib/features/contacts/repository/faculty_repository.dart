@@ -1,0 +1,1228 @@
+
+
+import '../models/department.dart';
+import '../models/faculty.dart';
+import '../models/teacher.dart';
+
+class FacultyRepository {
+  static final List<Faculty> faculties = [
+    Faculty(
+      name: "Faculty of Science and Engineering",
+      departments: [
+        Department(
+          name: "Department of Mathematics",
+          shortName: "Mathematics",
+          teachers: [
+            Teacher(
+              name: "Chinmayee Podder",
+              designation: "Assistant Professor & Chairman",
+              contactNumber: 01816298577,
+              email: "chinmayeepodder1@gmail.com",
+            ),
+            Teacher(
+              name: "Dr. Md. Shafiul Alam",
+              designation: "Assistant Professor",
+              contactNumber: 01317013931,
+              email: "msalam@bu.ac.bd",
+            ),
+            Teacher(
+              name: "Dr. Muhammad Shakhawat Hossain",
+              designation: "Assistant Professor",
+              contactNumber: 01556357876,
+              email: "mshossain@bu.ac.bd",
+            ),
+            Teacher(
+              name: "Dr. Bijan Krishna Saha",
+              designation: "Assistant Professor",
+              contactNumber: 01935839536,
+              email: "bijandumath@gmail.com",
+            ),
+            Teacher(
+              name: "Hena Rani Biswas",
+              designation: "Assistant Professor",
+              contactNumber: 01816582603,
+              email: "biswas.hena@yahoo.com",
+            ),
+            Teacher(
+              name: "Jishan Ahmed",
+              designation: "Assistant Professor",
+              contactNumber: 3179415746,
+              email: "jahmed@bgsu.edu",
+            ),
+            Teacher(
+              name: "Samima Akhter",
+              designation: "Assistant Professor",
+              contactNumber: 01960700204,
+              email: "samima.akh13@gmail.com",
+            ),
+            Teacher(
+              name: "Md. Anwarul Islam Bhuiyan",
+              designation: "Assistant Professor",
+              contactNumber: 01923619507,
+              email: "maibhuiyan@bu.ac.bd",
+            ),
+            Teacher(
+              name: "Abdullah Ahmed Foisal",
+              designation: "Assistant Professor",
+              contactNumber: 01739300238,
+              email: "foisalku_math08@yahoo.com",
+            ),
+            Teacher(
+              name: "Shek Ahmed",
+              designation: "Assistant Professor",
+              contactNumber: 01829464490,
+              email: "shekmathdu@gmail.com",
+            ),
+            Teacher(
+              name: "MAHUA JAHAN RUPA",
+              designation: "Lecturer",
+              contactNumber: 01938354518,
+              email: "jahanmahua@gmail.com",
+            ),
+            Teacher(
+              name: "Shujit Kumar Bala",
+              designation: "Lecturer",
+              contactNumber: 01726704468,
+              email: "skbala@bu.ac.bd",
+            ),
+          ],
+        ),
+        Department(
+          name: "Department of Computer Science & Engineering",
+          shortName: "CSE",
+          teachers: [
+            Teacher(
+              name: "Md. Erfan",
+              designation: "Assistant Professor & Chairman",
+              contactNumber: 01799598455,
+              email: "irfan.bucse@gmail.com",
+            ),
+            Teacher(
+              name: "Rahat Hossain Faisal",
+              designation: "Assistant Professor",
+              contactNumber: 01733977761,
+              email: "rhfaisal@bu.ac.bd",
+            ),
+            Teacher(
+              name: "Dr. Md Manjur Ahmed",
+              designation: "Assistant Professor",
+              contactNumber: 01851924944,
+              email: "manjur_39@yahoo.com",
+            ),
+            Teacher(
+              name: "Md Mostafijur Rahman",
+              designation: "Assistant Professor",
+              contactNumber: 01739097182,
+              email: "mostafij.csebu@gmail.com",
+            ),
+            Teacher(
+              name: "Md. Samsuddoha",
+              designation: "Assistant Professor",
+              contactNumber: 01737349075,
+              email: "sams.csebu@gmail.com",
+            ),
+            Teacher(
+              name: "Tania Islam",
+              designation: "Assistant Professor",
+              contactNumber: 01059505136,
+              email: "tania.bd.09@gmail.com",
+            ),
+            Teacher(
+              name: "Sohely Jahan",
+              designation: "Assistant Professor",
+              contactNumber: 01317419066,
+              email: "sohely.cse@gmail.com",
+            ),
+            Teacher(
+              name: "Md. Rashid Al Asif",
+              designation: "Assistant Professor",
+              contactNumber: 01734528367,
+              email: "rashid.al.asif@gmail.com",
+            ),
+            Teacher(
+              name: "Md Mahbub E Noor",
+              designation: "Lecturer",
+              contactNumber: 01734094560,
+              email: "mahbub0601001@gmail.com",
+            ),
+          ],
+        ),
+        Department(
+          name: "Department of Chemistry",
+          shortName: "Chemistry",
+          teachers: [
+            Teacher(
+              name: "Dr. Halima Bagum",
+              designation: "Assistant Professor & Chairman",
+              contactNumber: 01724181727,
+              email: "halimaju35@gmail.com",
+            ),
+            Teacher(
+              name: "Dr. Gazi Jahirul Islam",
+              designation: "Assistant Professor",
+              contactNumber: 04312177762,
+              email: "gjahir@yahoo.com",
+            ),
+            Teacher(
+              name: "Dr. Md. Masud Parvez",
+              designation: "Assistant Professor",
+              contactNumber: 01718669346,
+              email: "masud.chdu@yahoo.com",
+            ),
+            Teacher(
+              name: "Dr. Md. Nazmul Kayes",
+              designation: "Assistant Professor",
+              contactNumber: 01911453621,
+              email: "dmnkayes@bu.ac.bd",
+            ),
+            Teacher(
+              name: "Nahida Akter",
+              designation: "Assistant Professor",
+              contactNumber: 07412929986,
+              email: "nahida.sharmin07@gmail.com",
+            ),
+            Teacher(
+              name: "Farzana Akter",
+              designation: "Assistant Professor",
+              contactNumber: 01799453814,
+              email: "popy.sust@gmail.com",
+            ),
+            Teacher(
+              name: "Mahmudul Hassan Suhag",
+              designation: "Assistant Professor",
+              contactNumber: 01718316196,
+              email: "mhsuhag@bu.ac.bd",
+            ),
+            Teacher(
+              name: "Prianka Banik",
+              designation: "Assistant Professor",
+              contactNumber: 01930080603,
+              email: "pbanik@bu.ac.bd",
+            ),
+          ],
+        ),
+        Department(
+          name: "Department of Physics",
+          shortName: "Physics",
+          teachers: [
+            Teacher(
+              name: "Dr. Md. Khorshed Alam",
+              designation: "Assistant Professor & Chairman",
+              contactNumber: 01763360975,
+              email: "dmkalam@bu.ac.bd",
+            ),
+            Teacher(
+              name: "Dr. Rahima Nasrin",
+              designation: "Assistant Professor",
+              contactNumber: 01727030946,
+              email: "drnasrin@bu.ac.bd",
+            ),
+            Teacher(
+              name: "Samiran Roy",
+              designation: "Assistant Professor",
+              contactNumber: 01719061610,
+              email: "sroy@bu.ac.bd",
+            ),
+            Teacher(
+              name: "Dr. Mohammad Mahfuz Alam",
+              designation: "Assistant Professor",
+              contactNumber: 01990244833,
+              email: "mahfuzalam08@yahoo.com",
+            ),
+            Teacher(
+              name: "Md. Imran Hossain",
+              designation: "Assistant Professor",
+              contactNumber: 01920690069,
+              email: "imran10.ku@gmail.com",
+            ),
+            Teacher(
+              name: "Md Arif Ul Islam",
+              designation: "Assistant Professor",
+              contactNumber: 08093698980,
+              email: "mauislam@bu.ac.bd",
+            ),
+            Teacher(
+              name: "Md. Matiur Rahman",
+              designation: "Assistant Professor",
+              contactNumber: 01730232978,
+              email: "mmarahman@bu.ac.bd",
+            ),
+            Teacher(
+              name: "Md Saif Ishtiaque",
+              designation: "Assistant Professor",
+              contactNumber: 01753142402,
+              email: "msishtiaque@bu.ac.bd",
+            ),
+          ],
+        ),
+        Department(
+          name: "Department of Geology & Mining",
+          shortName: "Geology & Mining",
+          teachers: [
+            Teacher(
+              name: "Sukhen Goswami",
+              designation: "Assistant Professor & Chairman",
+              contactNumber: 01913725897,
+              email: "sgoswami@bu.ac.bd",
+            ),
+            Teacher(
+              name: "Dr. Dhiman Kumer Roy",
+              designation: "Assistant Professor",
+              contactNumber: 01779246902,
+              email: "ddkroy@bu.ac.bd",
+            ),
+            Teacher(
+              name: "Abu Jafor Mia",
+              designation: "Assistant Professor",
+              contactNumber: 01759707030,
+              email: "jafordu1984@gmail.com",
+            ),
+            Teacher(
+              name: "MUHAMMAD RISALAT RAFIQ",
+              designation: "Assistant Professor",
+              contactNumber: 01717041895,
+              email: "mrrafiq@bu.ac.bd",
+            ),
+            Teacher(
+              name: "Md. Ilias Mahmud",
+              designation: "Assistant Professor",
+              contactNumber: 01736171836,
+              email: "mimahmud@bu.ac.bd",
+            ),
+            Teacher(
+              name: "Md. Abdullah Salman",
+              designation: "Assistant Professor",
+              contactNumber: 01913374983,
+              email: "masalman@bu.ac.bd",
+            ),
+            Teacher(
+              name: "Md. Hasnat Jaman",
+              designation: "Assistant Professor",
+              contactNumber: 01723961386,
+              email: "mhjaman@bu.ac.bd",
+            ),
+            Teacher(
+              name: "Atikul Haque Farazi",
+              designation: "Lecturer",
+              contactNumber: 01867880529,
+              email: "ahfarazi@barisaluniv.ac.bd",
+            ),
+          ],
+        ),
+        Department(
+          name: "Department of Statistics",
+          shortName: "Statistics",
+          teachers: [
+            Teacher(
+              name: "Md. Saif Uddin Rashed",
+              designation: "Assistant Professor & Chairman",
+              contactNumber: 01739929527,
+              email: "md.saifuddinrashed@gmail.com",
+            ),
+            Teacher(
+              name: "Momenul Haque Mondol",
+              designation: "Assistant Professor",
+              contactNumber: 01749429140,
+              email: "mmondol@isrt.ac.bd",
+            ),
+            Teacher(
+              name: "Ahsanul Haque",
+              designation: "Lecturer",
+              contactNumber: 01772774307,
+              email: "ahaque@bu.ac.bd",
+            ),
+          ],
+        ),
+      ],
+    ),
+    Faculty(
+      name: "Faculty of Bio-Sciences",
+      departments: [
+        Department(
+          name: "Department of Soil & Environmental Sciences",
+          shortName: "SES",
+          teachers: [
+            Teacher(
+              name: "Dr. Monoara Begum",
+              designation: "Assistant Professor & Chairman",
+              contactNumber: 01711789644,
+              email: "bmonoara@ymail.com",
+            ),
+            Teacher(
+              name: "Dr. Md. Jamal Uddin",
+              designation: "Assistant Professor",
+              contactNumber: 01723108347,
+              email: "jamal_swedu@yahoo.com",
+            ),
+            Teacher(
+              name: "Anjuman Ara Rajonee",
+              designation: "Assistant Professor",
+              contactNumber: 01676154163,
+              email: "rajonee.du101361@gmail.com",
+            ),
+            Teacher(
+              name: "Dr. Ferdouse Zaman Tanu",
+              designation: "Assistant Professor",
+              contactNumber: 01716216131,
+              email: "fztanu@bu.ac.bd",
+            ),
+            Teacher(
+              name: "Ishrat Jahan Sanchary",
+              designation: "Assistant Professor",
+              contactNumber: 01759222695,
+              email: "ijsanchary@gmail.com",
+            ),
+            Teacher(
+              name: "Sayeda Sabrina Ali",
+              designation: "Lecturer",
+              contactNumber: 01706944201,
+              email: "ssali@barisaluniv.ac.bd",
+            ),
+            Teacher(
+              name: "Kazi Md. Jahangir Kabir",
+              designation: "Lecturer",
+              contactNumber: 01794040988,
+              email: "jahangirswed@gmail.com",
+            ),
+            Teacher(
+              name: "Md. Mahmudul Islam",
+              designation: "Lecturer",
+              contactNumber: 01673732205,
+              email: "mmislam@bu.ac.bd",
+            ),
+            Teacher(
+              name: "Afroja Nasrin",
+              designation: "Lecturer",
+              contactNumber: 01976780033,
+              email: "afroja.swe@gmail.com",
+            ),
+          ],
+        ),
+        Department(
+          name: "Department of Botany",
+          shortName: "Botany",
+          teachers: [
+            Teacher(
+              name: "Md. Uzzal Hossain",
+              designation: "Assistant Professor & Chairman",
+              contactNumber: 01737837649,
+              email: "muhossain@bu.ac.bd",
+            ),
+            Teacher(
+              name: "Dr. Subroto Kumar Das",
+              designation: "Assistant Professor",
+              contactNumber: 01715540458,
+              email: "mrsubroto@yahoo.com",
+            ),
+            Teacher(
+              name: "Mahin Afroz",
+              designation: "Assistant Professor",
+              contactNumber: 01710813722,
+              email: "mahin.afroz@yahoo.com",
+            ),
+            Teacher(
+              name: "Riyad Hossen",
+              designation: "Assistant Professor",
+              contactNumber: 01811254196,
+              email: "rhossen@bu.ac.bd",
+            ),
+            Teacher(
+              name: "Shawon Mitra",
+              designation: "Assistant Professor",
+              contactNumber: 01515609248,
+              email: "mshawon305@gmail.com",
+            ),
+          ],
+        ),
+        Department(
+          name: "Department of Coastal Studies & Disaster Management",
+          shortName: "CDM",
+          teachers: [
+            Teacher(
+              name: "Dr. Hafiz Ashraful Haque",
+              designation: "Assistant Professor & Chairman",
+              contactNumber: 01819447375,
+              email: "haqueha@gmail.com",
+            ),
+            Teacher(
+              name: "Swarnali Mahmood",
+              designation: "Assistant Professor",
+              contactNumber: 01716065149,
+              email: "smahmood@bu.ac.bd",
+            ),
+            Teacher(
+              name: "Alamgir Hosain",
+              designation: "Assistant Professor",
+              contactNumber: 01722539551,
+              email: "alamgir_geo_du@yahoo.com",
+            ),
+            Teacher(
+              name: "Tasnim Jerin",
+              designation: "Assistant Professor",
+              contactNumber: 01624053729,
+              email: "tjerin@bu.ac.bd",
+            ),
+          ],
+        ),
+        Department(
+          name: "Deparment of Biochemistry & Biotechnology",
+          shortName: "Biochemistry",
+          teachers: [
+            Teacher(
+              name: "Dr. Rehana Parvin",
+              designation: "Assistant Professor & Chairman",
+              contactNumber: 01788663181,
+              email: "rehanadu@yahoo.com",
+            ),
+            Teacher(
+              name: "Md. Sajedul Islam",
+              designation: "Assistant Professor",
+              contactNumber: 61406892203,
+              email: "msaislam@bu.ac.bd",
+            ),
+            Teacher(
+              name: "MD Hasib",
+              designation: "Assistant Professor",
+              contactNumber: 01701033518,
+              email: "hsbharic22@gmail.com",
+            ),
+            Teacher(
+              name: "Fahmida Sultana Rima",
+              designation: "Assistant Professor",
+              contactNumber: 01719103076,
+              email: "fahmidarima7@gmail.com",
+            ),
+            Teacher(
+              name: "Shaila Haque",
+              designation: "Lecturer",
+              contactNumber: 01625184399,
+              email: "shaque@bu.ac.bd",
+            ),
+          ],
+        ),
+      ],
+    ),
+    Faculty(
+      name: "Faculty of Business Studies",
+      departments: [
+        Department(
+          name: "Department of Management Studies",
+          shortName: "Management",
+          teachers: [
+            Teacher(
+              name: "Nusrat Sharmin Lipy",
+              designation: "Assistant Professor & Chairman",
+              contactNumber: 01744998866,
+              email: "nslipy@bu.ac.bd",
+            ),
+            Teacher(
+              name: "Dr. Abdullah Al Masud",
+              designation: "Assistant Professor",
+              contactNumber: 01711968949,
+              email: "aamasud@bu.ac.bd",
+            ),
+            Teacher(
+              name: "Md. Shakhawat Hossain",
+              designation: "Assistant Professor",
+              contactNumber: 01711352874,
+              email: "mshahossain@bu.ac.bd",
+            ),
+            Teacher(
+              name: "Md. Alamgir Mollah",
+              designation: "Assistant Professor",
+              contactNumber: 01790035425,
+              email: "alamgir1003@yahoo.com",
+            ),
+            Teacher(
+              name: "Tazizur Rahman",
+              designation: "Assistant Professor",
+              contactNumber: 01710407384,
+              email: "trahman@bu.ac.bd",
+            ),
+            Teacher(
+              name: "Md. Abir Hossain",
+              designation: "Assistant Professor",
+              contactNumber: 01722504414,
+              email: "mahossain@bu.ac.bd",
+            ),
+            Teacher(
+              name: "Md Sohel Chowdhury",
+              designation: "Assistant Professor",
+              contactNumber: 01911285898,
+              email: "mschowdhury@bu.ac.bd",
+            ),
+            Teacher(
+              name: "Suniti Debi Mondal",
+              designation: "Assistant Professor",
+              contactNumber: 01722028562,
+              email: "sunitidebi@gmail.com",
+            ),
+            Teacher(
+              name: "Surajit Kumar Mondal",
+              designation: "Lecturer",
+              contactNumber: 01747399170,
+              email: "surajitbumgt@gmail.com",
+            ),
+            Teacher(
+              name: "Saima Afrin Liza",
+              designation: "Lecturer",
+              contactNumber: 01634116076,
+              email: "afrinliza1991@gmail.com",
+            ),
+          ],
+        ),
+        Department(
+          name: "Department of Accounting & Information Systems",
+          shortName: "Accounting",
+          teachers: [
+            Teacher(
+              name: "Mohammad Rakibul Islam",
+              designation: "Assistant Professor & Chairman",
+              contactNumber: 01679069797,
+              email: "rakib.rajib13004@gmail.com",
+            ),
+            Teacher(
+              name: "Md. Harun-Or-Rosid",
+              designation: "Assistant Professor",
+              contactNumber: 01914200927,
+              email: "mhorrosid@bu.ac.bd",
+            ),
+            Teacher(
+              name: "Sujan Chandra Paul",
+              designation: "Assistant Professor",
+              contactNumber: 01914636366,
+              email: "scpaul@bu.ac.bd",
+            ),
+            Teacher(
+              name: "Probir Kumar Bhowmik",
+              designation: "Assistant Professor",
+              contactNumber: 01913518309,
+              email: "probir9012@gmail.com",
+            ),
+            Teacher(
+              name: "Abdul Alim Baser",
+              designation: "Assistant Professor",
+              contactNumber: 01814750380,
+              email: "alim.baser@gmail.com",
+            ),
+            Teacher(
+              name: "Dr. Mallika Saha",
+              designation: "Assistant Professor",
+              contactNumber: 01911533578,
+              email: "msaha@bu.ac.bd",
+            ),
+            Teacher(
+              name: "Md. Asiqur Rahman",
+              designation: "Assistant Professor",
+              contactNumber: 01920070922,
+              email: "rubelanni@gmail.com",
+            ),
+            Teacher(
+              name: "Shahadat Hossain",
+              designation: "Lecturer",
+              contactNumber: 01923099762,
+              email: "shawon17100@gmail.com",
+            ),
+          ],
+        ),
+        Department(
+          name: "Department of Marketing",
+          shortName: "Marketing",
+          teachers: [
+            Teacher(
+              name: "Bankim Chandra Sarker",
+              designation: "Assistant Professor & Chairman",
+              contactNumber: 01711433404,
+              email: "bankim132du@gmail.com",
+            ),
+            Teacher(
+              name: "Md. Wahidur Rahman",
+              designation: "Assistant Professor",
+              contactNumber: 01715426342,
+              email: "mwrahman@barisaluniv.ac.bd",
+            ),
+            Teacher(
+              name: "Nusrat Jahan",
+              designation: "Assistant Professor",
+              contactNumber: 01912087233,
+              email: "njahan.uibe@gmail.com",
+            ),
+            Teacher(
+              name: "Dr. Md. Abdul Kaium",
+              designation: "Assistant Professor",
+              contactNumber: 01717632844,
+              email: "makaium@bu.ac.bd",
+            ),
+            Teacher(
+              name: "Fatema-Tuz-Zohora",
+              designation: "Assistant Professor",
+              contactNumber: 01677446959,
+              email: "zohoranadee@yahoo.com",
+            ),
+            Teacher(
+              name: "Md. Mehedi Hassan",
+              designation: "Assistant Professor",
+              contactNumber: 01722590830,
+              email: "mehedisharifmkt@gmail.com",
+            ),
+            Teacher(
+              name: "Md. Imran Hossain",
+              designation: "Assistant Professor",
+              contactNumber: 01711852619,
+              email: "mihimranmkt@gmail.com",
+            ),
+            Teacher(
+              name: "Md. Mahiuddin Sabbir",
+              designation: "Assistant Professor",
+              contactNumber: 01711433510,
+              email: "mmsabbir@bu.ac.bd",
+            ),
+            Teacher(
+              name: "Saima Akhter",
+              designation: "Lecturer",
+              contactNumber: 01520100302,
+              email: "saimakhter297@gmail.com",
+            ),
+            Teacher(
+              name: "Tasmin Jahan",
+              designation: "Lecturer",
+              contactNumber: 01681532291,
+              email: "tasmin_ema@yahoo.com",
+            ),
+          ],
+        ),
+        Department(
+          name: "Department of Finance & Banking",
+          shortName: "Finance & Banking",
+          teachers: [
+            Teacher(
+              name: "Shahadat Hussain",
+              designation: "Assistant Professor & Chairman",
+              contactNumber: 01622038797,
+              email: "shahadathussain09@gmail.com",
+            ),
+            Teacher(
+              name: "Tandra Mondal",
+              designation: "Assistant Professor",
+              contactNumber: 01921679576,
+              email: "t.mondal44@gmail.com",
+            ),
+            Teacher(
+              name: "Md. Mahtab Uddin",
+              designation: "Assistant Professor",
+              contactNumber: 01916236518,
+              email: "mahtab.du22@yahoo.com",
+            ),
+            Teacher(
+              name: "Papi Halder",
+              designation: "Assistant Professor",
+              contactNumber: 01724181534,
+              email: "phalder.fin01@gmail.com",
+            ),
+            Teacher(
+              name: "Rabeya Sultana Lata",
+              designation: "Assistant Professor",
+              contactNumber: 01721363268,
+              email: "lata1306@gmail.com",
+            ),
+            Teacher(
+              name: "Morioum Hasna",
+              designation: "Assistant Professor",
+              contactNumber: 01733458828,
+              email: "morioum11@gmail.com",
+            ),
+            Teacher(
+              name: "Shoilee Sumiyaa",
+              designation: "Assistant Professor",
+              contactNumber: 01515239175,
+              email: "sumiyaa18017@gmail.com",
+            ),
+            Teacher(
+              name: "Md. Saiful Islam",
+              designation: "Assistant Professor",
+              contactNumber: 01738711291,
+              email: "saiful.ru10@gmail.com",
+            ),
+            Teacher(
+              name: "Nusrat Jahan Benozir",
+              designation: "Lecturer",
+              contactNumber: 01914467217,
+              email: "nusratbenozir@gmail.com",
+            ),
+          ],
+        ),
+      ],
+    ),
+    Faculty(
+      name: "Faculty of Social Sciences",
+      departments: [
+        Department(
+          name: "Department of Economics",
+          shortName: "Economics",
+          teachers: [
+            Teacher(
+              name: "Nahida Sultana",
+              designation: "Assistant Professor & Chairman",
+              contactNumber: 01912043165,
+              email: "nsultana@bu.ac.bd",
+            ),
+            Teacher(
+              name: "Jyotirmay Biswas",
+              designation: "Assistant Professor",
+              contactNumber: 01720996333,
+              email: "jyo45@yahoo.com",
+            ),
+            Teacher(
+              name: "Rejoana Islam",
+              designation: "Assistant Professor",
+              contactNumber: 01552544450,
+              email: "rejoanamou@gmail.com",
+            ),
+            Teacher(
+              name: "Refat Ferdous",
+              designation: "Assistant Professor",
+              contactNumber: 01913996252,
+              email: "rferdous@bu.ac.bd",
+            ),
+            Teacher(
+              name: "Md. Tanvir Ahmed",
+              designation: "Assistant Professor",
+              contactNumber: 01937882666,
+              email: "mdtanvirahmed03@gmail.com",
+            ),
+            Teacher(
+              name: "Apurba Roy",
+              designation: "Assistant Professor",
+              contactNumber: 01922623122,
+              email: "aroy@bu.ac.bd",
+            ),
+            Teacher(
+              name: "Marzia Nomi",
+              designation: "Assistant Professor",
+              contactNumber: 01711433288,
+              email: "mnomi@bu.ac.bd",
+            ),
+            Teacher(
+              name: "Sudipa Basu",
+              designation: "Assistant Professor",
+              contactNumber: 01912426461,
+              email: "sbasu@bu.ac.bd",
+            ),
+            Teacher(
+              name: "Mamunur Rahman",
+              designation: "Lecturer",
+              contactNumber: 01942547419,
+              email: "mamuneco151@gmail.com",
+            ),
+          ],
+        ),
+        Department(
+          name: "Department of Political Sciences",
+          shortName: "Political Sciences",
+          teachers: [
+            Teacher(
+              name: "Md. Masum Sikdar",
+              designation: "Assistant Professor & Chairman",
+              contactNumber: 01725762428,
+              email: "masum.cu84@gmail.com",
+            ),
+            Teacher(
+              name: "Sushmita Roy",
+              designation: "Assistant Professor",
+              contactNumber: 01727941374,
+              email: "sushmita0305@gmail.com",
+            ),
+            Teacher(
+              name: "Md. Sohel Rana",
+              designation: "Assistant Professor",
+              contactNumber: 01683026229,
+              email: "msrana@bu.ac.bd",
+            ),
+            Teacher(
+              name: "Md. Mehedi Hasan Shohag",
+              designation: "Assistant Professor",
+              contactNumber: 01779764856,
+              email: "shohag.du9@gmail.com",
+            ),
+            Teacher(
+              name: "Md. Al-Amin",
+              designation: "Assistant Professor",
+              contactNumber: 01737855061,
+              email: "maamin@bu.ac.bd",
+            ),
+            Teacher(
+              name: "Md. Sunbin Islam",
+              designation: "Assistant Professor",
+              contactNumber: 01734154504,
+              email: "msbislam@bu.ac.bd",
+            ),
+            Teacher(
+              name: "Farhana Akter Tania",
+              designation: "Lecturer",
+              contactNumber: 01553731887,
+              email: "tanianayeb@gmail.com",
+            ),
+            Teacher(
+              name: "Manira Akhter",
+              designation: "Lecturer",
+              contactNumber: 01703236943,
+              email: "manirajnu7@gmail.com",
+            ),
+          ],
+        ),
+        Department(
+          name: "Department of Sociology",
+          shortName: "Sociology",
+          teachers: [
+            Teacher(
+              name: "Dr. Tareq Mahamud Abir",
+              designation: "Assistant Professor & Chairman",
+              contactNumber: 01677746247,
+              email: "abirsocbu2016@yahoo.com",
+            ),
+            Teacher(
+              name: "Dilafroze Khanam",
+              designation: "Assistant Professor",
+              contactNumber: 01717069218,
+              email: "taniyadusoc@gmail.com",
+            ),
+            Teacher(
+              name: "Md. Sadequr Rahman",
+              designation: "Assistant Professor",
+              contactNumber: 01720051868,
+              email: "msrahman@bu.ac.bd",
+            ),
+            Teacher(
+              name: "Ashim Kumar Nandi",
+              designation: "Assistant Professor",
+              contactNumber: 01675961704,
+              email: "aknandi@bu.ac.bd",
+            ),
+            Teacher(
+              name: "Md. Ohidur Zaman",
+              designation: "Assistant Professor",
+              contactNumber: 01722087905,
+              email: "zaman.pin2@gmail.com",
+            ),
+            Teacher(
+              name: "Syed Ashik - E - Elahi",
+              designation: "Assistant Professor",
+              contactNumber: 01716034415,
+              email: "selahi230@gmail.com",
+            ),
+            Teacher(
+              name: "Ashikuzzaman",
+              designation: "Assistant Professor",
+              contactNumber: 01786518273,
+              email: "ashik.du20@gmail.com",
+            ),
+            Teacher(
+              name: "Sadman Shakib Bin Rahaman",
+              designation: "Lecturer",
+              contactNumber: 01787369536,
+              email: "ssbrahaman@bu.ac.bd",
+            ),
+          ],
+        ),
+        Department(
+          name: "Department of Public Administration",
+          shortName: "Public Ad",
+          teachers: [
+            Teacher(
+              name: "Dr. Israt Zahan",
+              designation: "Assistant Professor & Chairman",
+              contactNumber: 01680067939,
+              email: "isratzahanliza@yahoo.com",
+            ),
+            Teacher(
+              name: "Tasnuva Habib Zisan",
+              designation: "Assistant Professor",
+              contactNumber: 01831890661,
+              email: "th_zisan@yahoo.com",
+            ),
+            Teacher(
+              name: "Rifat Mahmud",
+              designation: "Assistant Professor",
+              contactNumber: 01552394009,
+              email: "rifat.89@hotmail.com",
+            ),
+            Teacher(
+              name: "Hosneara Dalia",
+              designation: "Assistant Professor",
+              contactNumber: 01783904232,
+              email: "hasnahenadalia@gmail.com",
+            ),
+            Teacher(
+              name: "Marufa Akter",
+              designation: "Assistant Professor",
+              contactNumber: 01710595785,
+              email: "marufa_mou@yahoo.com",
+            ),
+            Teacher(
+              name: "Md Shirajis Shadik",
+              designation: "Assistant Professor",
+              contactNumber: 01721533154,
+              email: "msshadik@bu.ac.bd",
+            ),
+            Teacher(
+              name: "Tasnia Sumya",
+              designation: "Lecturer",
+              contactNumber: 01779042013,
+              email: "tasnia.sumya@yahoo.com",
+            ),
+            Teacher(
+              name: "Nusrat Jahan Nipu",
+              designation: "Lecturer",
+              contactNumber: 01751172806,
+              email: "nusratjaman11@gmail.com",
+            ),
+            Teacher(
+              name: "Rani Sultana",
+              designation: "Lecturer",
+              contactNumber: 01748901111,
+              email: "rani.sultana1992@gmail.com",
+            ),
+          ],
+        ),
+      ],
+    ),
+    Faculty(
+      name: "Faculty of Arts and Humanities",
+      departments: [
+        Department(
+          name: "Department of Bangla",
+          shortName: "Bangla",
+          teachers: [
+            Teacher(
+              name: "Sanjoy Kumar Sarker",
+              designation: "Assistant Professor & Chairman",
+              contactNumber: 01719465516,
+              email: "sanjoy.36@gmail.com",
+            ),
+            Teacher(
+              name: "Sharmin Akter",
+              designation: "Assistant Professor",
+              contactNumber: 01727973107,
+              email: "slucky.bu.ju@gmail.com",
+            ),
+            Teacher(
+              name: "Mohsina Hossain",
+              designation: "Assistant Professor",
+              contactNumber: 01729995082,
+              email: "mohsina.hossaindu@gmail.com",
+            ),
+            Teacher(
+              name: "Unmesh Roy",
+              designation: "Assistant Professor",
+              contactNumber: 01920669127,
+              email: "unmesh.roy.che@gmail.com",
+            ),
+            Teacher(
+              name: "Mohammad Sakibul Hasan",
+              designation: "Assistant Professor",
+              contactNumber: 01948424493,
+              email: "sakibulhasan1208@gmail.com",
+            ),
+            Teacher(
+              name: "Pompa Rani Majumder",
+              designation: "Assistant Professor",
+              contactNumber: 01747152661,
+              email: "Pompa_du12@yahoo.com",
+            ),
+          ],
+        ),
+        Department(
+          name: "Department of English",
+          shortName: "English",
+          teachers: [
+            Teacher(
+              name: "Yasif Ahmad Faysal",
+              designation: "Assistant Professor & Chairman",
+              contactNumber: 01736037226,
+              email: "yasiffaysal@gmail.com",
+            ),
+            Teacher(
+              name: "Dr Md. Muhasin Uddin",
+              designation: "Professor",
+              contactNumber: 01711943101,
+              email: "amuhsinuddin@gmail.com",
+            ),
+            Teacher(
+              name: "Mohammad Tanvir Kaisar",
+              designation: "Assistant Professor",
+              contactNumber: 01878330013,
+              email: "kaisar_tanvir@yahoo.com",
+            ),
+            Teacher(
+              name: "Md. Tariqul Huq",
+              designation: "Assistant Professor",
+              contactNumber: 01712291715,
+              email: "tariqulbu@gmail.com",
+            ),
+            Teacher(
+              name: "Md. Mijanur Rahman",
+              designation: "Assistant Professor",
+              contactNumber: 01718745094,
+              email: "rmijanur86@gmail.com",
+            ),
+            Teacher(
+              name: "Sumona Rani Saha",
+              designation: "Assistant Professor",
+              contactNumber: 01673926190,
+              email: "sumonasaha111@gmail.com",
+            ),
+            Teacher(
+              name: "Khadiza Akhter",
+              designation: "Assistant Professor",
+              contactNumber: 01717583154,
+              email: "kakhter@bu.ac.bd",
+            ),
+            Teacher(
+              name: "Md. Shafiqul Islam",
+              designation: "Assistant Professor",
+              contactNumber: 01717987953,
+              email: "mshaislam@bu.ac.bd",
+            ),
+          ],
+        ),
+        Department(
+          name: "Department of Philosophy",
+          shortName: "Philosophy",
+          teachers: [
+            Teacher(
+              name: "Md. Abdullah-All-Mamun",
+              designation: "Assistant Professor & Chairman",
+              contactNumber: 01723114567,
+              email: "aamamun37@gmail.com",
+            ),
+            Teacher(
+              name: "Kazi Shoyebur Rahman",
+              designation: "Assistant Professor",
+              contactNumber: 01712459463,
+              email: "shoyeb111@gmail.com",
+            ),
+            Teacher(
+              name: "Mitali Ghosh",
+              designation: "Assistant Professor",
+              contactNumber: 01726737328,
+              email: "mitali.du@yahoo.com",
+            ),
+            Teacher(
+              name: "Sahanaj Parvin Rimy",
+              designation: "Assistant Professor",
+              contactNumber: 01777569201,
+              email: "sahanajparvinrimy95@gmail.com",
+            ),
+            Teacher(
+              name: "Abu Salem",
+              designation: "Lecturer",
+              contactNumber: 01515201499,
+              email: "salemdu2011@gmail.com",
+            ),
+            Teacher(
+              name: "TUMPA SAHA",
+              designation: "Lecturer",
+              contactNumber: 01757283969,
+              email: "sahatumpa05@yahoo.com",
+            ),
+          ],
+        ),
+        Department(
+          name: "Department of Mass Communication & Journalism",
+          shortName: "Journalism",
+          teachers: [
+            Teacher(
+              name: "Emran Hossain",
+              designation: "Assistant Professor & Chairman",
+              contactNumber: 01812191817,
+              email: "emrandumcj93@gmail.com",
+            ),
+            Teacher(
+              name: "Sharifa Umma Shirina",
+              designation: "Assistant Professor",
+              contactNumber: 01993976818,
+              email: "sushirin.bu@gmail.com",
+            ),
+            Teacher(
+              name: "Monira Begum",
+              designation: "Assistant Professor",
+              contactNumber: 01964896430,
+              email: "moni27mcjdu@gmail.com",
+            ),
+            Teacher(
+              name: "Md. Forhad Uddin",
+              designation: "Assistant Professor",
+              contactNumber: 01832240210,
+              email: "forhadmcj@gmail.com",
+            ),
+            Teacher(
+              name: "Farhad Uddin",
+              designation: "Assistant Professor",
+              contactNumber: 01839089182,
+              email: "farhaddumcj1991@gmail.com",
+            ),
+          ],
+        ),
+        Department(
+          name: "Department of History & Civilization",
+          shortName: "History",
+          teachers: [
+            Teacher(
+              name: "Souraiya Akther",
+              designation: "Chairman",
+              contactNumber: 01515609272,
+              email: "suraiyaislam1993@gmail.com",
+            ),
+            Teacher(
+              name: "Dr. Mohammad Abdul Baten Chowdhury",
+              designation: "Assistant Professor",
+              contactNumber: 01712829594,
+              email: "batenchowdhury06@gmail.com",
+            ),
+          ],
+        ),
+      ],
+    ),
+    Faculty(
+      name: "Faculty of Law",
+      departments: [
+        Department(
+          name: "Department of Law",
+          shortName: "Law",
+          teachers: [
+            Teacher(
+              name: "Md. Sadekur Rahman",
+              designation: "Chairman",
+              contactNumber: 01710533919,
+              email: "sadek_bu@yahoo.com",
+            ),
+            Teacher(
+              name: "Supravat Halder",
+              designation: "Assistant Professor",
+              contactNumber: 01712636122,
+              email: "c_khan6361@yahoo.com",
+            ),
+            Teacher(
+              name: "Sultana Jahan",
+              designation: "Assistant Professor",
+              contactNumber: 01845905048,
+              email: "sjahan@bu.ac.bd",
+            ),
+            Teacher(
+              name: "Alamgir Hossain",
+              designation: "Lecturer",
+              contactNumber: 01993506840,
+              email: "Alamgirllb.jnu@gmail.com",
+            ),
+            Teacher(
+              name: "Poli Rani",
+              designation: "Lecturer",
+              contactNumber: 01742654715,
+              email: "polilaw36@gmail.com",
+            ),
+          ],
+        ),
+      ],
+    ),
+  ];
+}

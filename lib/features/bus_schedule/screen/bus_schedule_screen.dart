@@ -13,6 +13,7 @@ import 'package:velocity_x/velocity_x.dart';
 
 import '../../../theme/theme/app_color.dart';
 import '../controller/bus_schedule_controller.dart';
+import '../repository/bus_schedule_repository.dart';
 
 class BusScheduleScreen extends ConsumerStatefulWidget {
   final String? payload;
@@ -31,6 +32,10 @@ class _BusScheduleScreenState extends ConsumerState<BusScheduleScreen> {
 
   @override
   Widget build(BuildContext context) {
+    var datas = ref.watch(providerOfBusSchedules) as List;
+
+    print(datas);
+
     final busScheduleController = ref.watch(providerOfBusScheduleController);
     return Scaffold(
         appBar: AppBar(
@@ -46,7 +51,7 @@ class _BusScheduleScreenState extends ConsumerState<BusScheduleScreen> {
                 icon: const Icon(Icons.download))
           ],
         ),
-        body: schedules == []
+        body: datas == []
             ? Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [

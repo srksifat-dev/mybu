@@ -1,5 +1,3 @@
-import 'dart:convert';
-import 'dart:io';
 import 'dart:ui';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -248,104 +246,387 @@ List<DateTime> dates = [
   DateTime(2023, 02, 23, 00, 00)
 ];
 
+int indexOfNextSchedule = 0;
+
 int nextMaxProgress(List<DateTime> dateTimes) {
   print("dates: $dates");
   print("next Max Progress executed");
   DateTime nextDateTime =
       dateTimes.where((date) => date.isAfter(DateTime.now())).first;
+  indexOfNextSchedule = dateTimes.indexOf(nextDateTime);
   print(nextDateTime);
   int result = Converter.dateTime2minute(DateTime.now(), nextDateTime);
   print(result);
   return result;
 }
 
-List<DateTime> allDateTimeForRouteOne = [];
-List<DateTime> allDateTimeForRouteTwo = [];
-List<DateTime> allDateTimeForRouteThree = [];
+List<DateTime> toCampusAllDateTimeForRouteOne = [];
+List<DateTime> toCampusAllDateTimeForRouteTwo = [];
+List<DateTime> toCampusAllDateTimeForRouteThree = [];
 
+List<DateTime> fromCampusAllDateTimeForRouteOne = [];
+List<DateTime> fromCampusAllDateTimeForRouteTwo = [];
+List<DateTime> fromCampusAllDateTimeForRouteThree = [];
 
-Future<void> showProgressNotification(
+Future<void> toCampusNotification(
   List<Schedule> schedulesForNThread,
   int routeNo,
 ) async {
-  print("allDateTimeForRouteOne: $allDateTimeForRouteOne");
+  // Route One
+  List<Schedule> routeOne =
+      schedulesForNThread.where((schedule) => schedule.routeNo == 1).toList();
 
-  // int indexOfAllTimeForRouteOne = 0;
-  // while (indexOfAllTimeForRouteOne < (allDateTimeForRouteOne.length - 1)) {
-  //   timesForRouteOne.add(Converter.dateTime2minute(
-  //       allDateTimeForRouteOne[indexOfAllTimeForRouteOne],
-  //       allDateTimeForRouteOne[indexOfAllTimeForRouteOne + 1]));
-  //   indexOfAllTimeForRouteOne++;
-  // }
+  List<Schedule> toCampusRouteOne = routeOne
+      .where((schedule) => schedule.to!.toLowerCase() == "campus")
+      .toList();
 
-  // print("timesForRouteOne: $timesForRouteOne");
+  // Route Two
+  List<Schedule> routeTwo =
+      schedulesForNThread.where((schedule) => schedule.routeNo == 2).toList();
+
+  List<Schedule> toCampusRouteTwo = routeTwo
+      .where((schedule) => schedule.to!.toLowerCase() == "campus")
+      .toList();
+
+  // Route Three
+  List<Schedule> routeThree =
+      schedulesForNThread.where((schedule) => schedule.routeNo == 3).toList();
+
+  List<Schedule> toCampusRouteThree = routeThree
+      .where((schedule) => schedule.to!.toLowerCase() == "campus")
+      .toList();
 
   print("Show progress notification");
-  // id++;
-  // final int progressId = id;
-  // const int maxProgress = 100;
-  if (DateTime.now().weekday == DateTime.sunday ||
-      DateTime.now().weekday == DateTime.monday ||
-      DateTime.now().weekday == DateTime.tuesday ||
-      DateTime.now().weekday == DateTime.wednesday ||
-      DateTime.now().weekday == DateTime.thursday) {
+  while (true) {
+    if (DateTime.now().weekday == DateTime.sunday ||
+        DateTime.now().weekday == DateTime.monday ||
+        DateTime.now().weekday == DateTime.tuesday ||
+        DateTime.now().weekday == DateTime.wednesday ||
+        DateTime.now().weekday == DateTime.thursday) {
+      if (nextMaxProgress(routeNo == 1
+              ? toCampusAllDateTimeForRouteOne
+              : routeNo == 2
+                  ? toCampusAllDateTimeForRouteTwo
+                  : toCampusAllDateTimeForRouteThree) <
+          300) {
+        for (int y = 0;
+            y <=
+                (nextMaxProgress(routeNo == 1
+                        ? toCampusAllDateTimeForRouteOne
+                        : routeNo == 2
+                            ? toCampusAllDateTimeForRouteTwo
+                            : toCampusAllDateTimeForRouteThree) +
+                    1);
+            y++) {
+          await Future<void>.delayed(const Duration(minutes: 1), () async {
+            final AndroidNotificationDetails androidNotificationDetails =
+                AndroidNotificationDetails(
+              routeNo == 1
+                  ? "toCampusRouteOne"
+                  : routeNo == 2
+                      ? "toCampusRouteTwo"
+                      : "toCampusRouteThree",
+              routeNo == 1
+                  ? "To Campus Route One"
+                  : routeNo == 2
+                      ? "To Campus Route Two"
+                      : "To Campus Route Three",
+              channelDescription:
+                  "Notification channel for route ${routeNo == 1 ? 'one' : routeNo == 2 ? 'two' : 'three'} reached to campus",
+              // icon: "bu-logo",
+              subText: "My BU",
+              channelShowBadge: false,
+              importance: Importance.max,
+              priority: Priority.high,
+              onlyAlertOnce: true,
+              showProgress: true,
+              maxProgress: nextMaxProgress(routeNo == 1
+                  ? toCampusAllDateTimeForRouteOne
+                  : routeNo == 2
+                      ? toCampusAllDateTimeForRouteTwo
+                      : toCampusAllDateTimeForRouteThree),
+              progress: y,
+            );
+            final NotificationDetails notificationDetails =
+                NotificationDetails(android: androidNotificationDetails);
+            if (routeNo == 1) {
+              await flutterLocalNotificationsPlugin.show(
+                  10,
+                  "Next bus from ${toCampusRouteOne[indexOfNextSchedule].from} to ${toCampusRouteOne[indexOfNextSchedule].to}",
+                  "${toCampusRouteOne[indexOfNextSchedule].buses} departure at ${toCampusRouteOne[indexOfNextSchedule].hour! > 12 ? toCampusRouteOne[indexOfNextSchedule].hour! - 12 : toCampusRouteOne[indexOfNextSchedule].hour} : ${toCampusRouteOne[indexOfNextSchedule].minute} ${toCampusRouteOne[indexOfNextSchedule].hour! > 12 ? 'pm' : 'am'}",
+                  notificationDetails,
+                  payload: 'busSchedules');
+              // }
+            } else if (routeNo == 2) {
+              await flutterLocalNotificationsPlugin.show(
+                  20,
+                  "Next bus from ${toCampusRouteTwo[indexOfNextSchedule].from} to ${toCampusRouteTwo[indexOfNextSchedule].to}",
+                  "${toCampusRouteTwo[indexOfNextSchedule].buses} departure at ${toCampusRouteTwo[indexOfNextSchedule].hour! > 12 ? toCampusRouteTwo[indexOfNextSchedule].hour! - 12 : toCampusRouteTwo[indexOfNextSchedule].hour} : ${toCampusRouteTwo[indexOfNextSchedule].minute} ${toCampusRouteTwo[indexOfNextSchedule].hour! > 12 ? 'pm' : 'am'}",
+                  notificationDetails,
+                  payload: 'busSchedules');
+            } else {
+              await flutterLocalNotificationsPlugin.show(
+                  30,
+                  "Next bus from ${routeThree[indexOfNextSchedule].from} to ${routeThree[indexOfNextSchedule].to}",
+                  "${routeThree[indexOfNextSchedule].buses} departure at ${routeThree[indexOfNextSchedule].hour! > 12 ? routeThree[indexOfNextSchedule].hour! - 12 : routeThree[indexOfNextSchedule].hour} : ${routeThree[indexOfNextSchedule].minute} ${routeThree[indexOfNextSchedule].hour! > 12 ? 'pm' : 'am'}",
+                  notificationDetails,
+                  payload: 'busSchedules');
+            }
+          });
+        }
+      } else if (DateTime.now() ==
+          ((routeNo == 1
+                  ? toCampusAllDateTimeForRouteOne[0]
+                  : routeNo == 2
+                      ? toCampusAllDateTimeForRouteTwo[0]
+                      : toCampusAllDateTimeForRouteThree[0])
+              .subtract(Duration(minutes: 30)))) {
+        for (int y = 0;
+            y <=
+                (nextMaxProgress(routeNo == 1
+                        ? toCampusAllDateTimeForRouteOne
+                        : routeNo == 2
+                            ? toCampusAllDateTimeForRouteTwo
+                            : toCampusAllDateTimeForRouteThree) +
+                    1);
+            y++) {
+          await Future<void>.delayed(const Duration(minutes: 1), () async {
+            final AndroidNotificationDetails androidNotificationDetails =
+                AndroidNotificationDetails(
+              routeNo == 1
+                  ? "toCampusRouteOne"
+                  : routeNo == 2
+                      ? "toCampusRouteTwo"
+                      : "toCampusRouteThree",
+              routeNo == 1
+                  ? "To Campus Route One"
+                  : routeNo == 2
+                      ? "To Campus Route Two"
+                      : "To Campus Route Three",
+              channelDescription:
+                  "Notification channel for route ${routeNo == 1 ? 'one' : routeNo == 2 ? 'two' : 'three'} reached to campus",
+              // icon: "bu-logo",
+              subText: "My BU",
+              channelShowBadge: false,
+              importance: Importance.max,
+              priority: Priority.high,
+              onlyAlertOnce: true,
+              showProgress: true,
+              maxProgress: nextMaxProgress(routeNo == 1
+                  ? toCampusAllDateTimeForRouteOne
+                  : routeNo == 2
+                      ? toCampusAllDateTimeForRouteTwo
+                      : toCampusAllDateTimeForRouteThree),
+              progress: y,
+            );
 
-        //TODO: It will be less than
-    if (nextMaxProgress(allDateTimeForRouteOne) > 300) {
-      for (int y = 0; y <= nextMaxProgress(allDateTimeForRouteOne); y++) {
-        await Future<void>.delayed(const Duration(seconds: 1), () async {
-          final AndroidNotificationDetails androidNotificationDetails =
-              AndroidNotificationDetails(
-            'progress channel',
-            'progress channel',
-            channelDescription: 'progress channel description',
-            channelShowBadge: false,
-            importance: Importance.max,
-            priority: Priority.high,
-            onlyAlertOnce: true,
-            showProgress: true,
-            maxProgress: nextMaxProgress(allDateTimeForRouteOne),
-            progress: y,
-          );
-          final NotificationDetails notificationDetails =
-              NotificationDetails(android: androidNotificationDetails);
-          await flutterLocalNotificationsPlugin.show(
-              1,
-              'progress notification title',
-              'progress notification body',
-              notificationDetails,
-              payload: 'item x');
-        });
-      }
-    } else if (DateTime.now() ==
-        (allDateTimeForRouteOne[0].subtract(Duration(minutes: 30)))) {
-      for (int y = 0; y <= nextMaxProgress(allDateTimeForRouteOne); y++) {
-        await Future<void>.delayed(const Duration(seconds: 1), () async {
-          final AndroidNotificationDetails androidNotificationDetails =
-              AndroidNotificationDetails(
-            'progress channel',
-            'progress channel',
-            channelDescription: 'progress channel description',
-            channelShowBadge: false,
-            importance: Importance.max,
-            priority: Priority.high,
-            onlyAlertOnce: true,
-            showProgress: true,
-            maxProgress: nextMaxProgress(allDateTimeForRouteOne),
-            progress: y,
-          );
-          final NotificationDetails notificationDetails =
-              NotificationDetails(android: androidNotificationDetails);
-          await flutterLocalNotificationsPlugin.show(
-              1,
-              'progress notification title',
-              'progress notification body',
-              notificationDetails,
-              payload: 'item x');
-        });
+            final NotificationDetails notificationDetails =
+                NotificationDetails(android: androidNotificationDetails);
+            if (routeNo == 1) {
+              await flutterLocalNotificationsPlugin.show(
+                  10,
+                  "Next bus from ${toCampusRouteOne[indexOfNextSchedule].from} to ${toCampusRouteOne[indexOfNextSchedule].to}",
+                  "${toCampusRouteOne[indexOfNextSchedule].buses} departure at ${toCampusRouteOne[indexOfNextSchedule].hour! > 12 ? toCampusRouteOne[indexOfNextSchedule].hour! - 12 : toCampusRouteOne[indexOfNextSchedule].hour} : ${toCampusRouteOne[indexOfNextSchedule].minute} ${toCampusRouteOne[indexOfNextSchedule].hour! > 12 ? 'pm' : 'am'}",
+                  notificationDetails,
+                  payload: 'busSchedules');
+            } else if (routeNo == 2) {
+              await flutterLocalNotificationsPlugin.show(
+                  20,
+                  "Next bus from ${toCampusRouteTwo[indexOfNextSchedule].from} to ${toCampusRouteTwo[indexOfNextSchedule].to}",
+                  "${toCampusRouteTwo[indexOfNextSchedule].buses} departure at ${toCampusRouteTwo[indexOfNextSchedule].hour! > 12 ? toCampusRouteTwo[indexOfNextSchedule].hour! - 12 : toCampusRouteTwo[indexOfNextSchedule].hour} : ${toCampusRouteTwo[indexOfNextSchedule].minute} ${toCampusRouteTwo[indexOfNextSchedule].hour! > 12 ? 'pm' : 'am'}",
+                  notificationDetails,
+                  payload: 'busSchedules');
+            } else {
+              await flutterLocalNotificationsPlugin.show(
+                  30,
+                  "Next bus from ${toCampusRouteThree[indexOfNextSchedule].from} to ${toCampusRouteThree[indexOfNextSchedule].to}",
+                  "${toCampusRouteThree[indexOfNextSchedule].buses} departure at ${toCampusRouteThree[indexOfNextSchedule].hour! > 12 ? toCampusRouteThree[indexOfNextSchedule].hour! - 12 : toCampusRouteThree[indexOfNextSchedule].hour} : ${toCampusRouteThree[indexOfNextSchedule].minute} ${toCampusRouteThree[indexOfNextSchedule].hour! > 12 ? 'pm' : 'am'}",
+                  notificationDetails,
+                  payload: 'busSchedules');
+            }
+          });
+        }
       }
     }
   }
+}
+
+Future<void> fromCampusNotification(
+  List<Schedule> schedulesForNThread,
+  int routeNo,
+) async {
+  // Route One
+  List<Schedule> routeOne =
+      schedulesForNThread.where((schedule) => schedule.routeNo == 1).toList();
+  List<Schedule> fromCampusRouteOne = routeOne
+      .where((schedule) => schedule.from!.toLowerCase() == "campus")
+      .toList();
+
+  // Route Two
+  List<Schedule> routeTwo =
+      schedulesForNThread.where((schedule) => schedule.routeNo == 2).toList();
+  List<Schedule> fromCampusRouteTwo = routeTwo
+      .where((schedule) => schedule.from!.toLowerCase() == "campus")
+      .toList();
+
+  // Route Three
+  List<Schedule> routeThree =
+      schedulesForNThread.where((schedule) => schedule.routeNo == 3).toList();
+  List<Schedule> fromCampusRouteThree = routeThree
+      .where((schedule) => schedule.from!.toLowerCase() == "campus")
+      .toList();
+
+  print("Show progress notification");
+    if (DateTime.now().weekday == DateTime.sunday ||
+        DateTime.now().weekday == DateTime.monday ||
+        DateTime.now().weekday == DateTime.tuesday ||
+        DateTime.now().weekday == DateTime.wednesday ||
+        DateTime.now().weekday == DateTime.thursday) {
+      if (nextMaxProgress(routeNo == 1
+              ? fromCampusAllDateTimeForRouteOne
+              : routeNo == 2
+                  ? fromCampusAllDateTimeForRouteTwo
+                  : fromCampusAllDateTimeForRouteThree) <
+          300) {
+        for (int y = 0;
+            y <=
+                (nextMaxProgress(routeNo == 1
+                        ? fromCampusAllDateTimeForRouteOne
+                        : routeNo == 2
+                            ? fromCampusAllDateTimeForRouteTwo
+                            : fromCampusAllDateTimeForRouteThree) +
+                    1);
+            y++) {
+          await Future<void>.delayed(const Duration(minutes: 1), () async {
+            final AndroidNotificationDetails androidNotificationDetails =
+                AndroidNotificationDetails(
+              routeNo == 1
+                  ? "fromCampusRouteOne"
+                  : routeNo == 2
+                      ? "fromCampusRouteTwo"
+                      : "fromCampusRouteThree",
+              routeNo == 1
+                  ? "From Campus Route One"
+                  : routeNo == 2
+                      ? "From Campus Route Two"
+                      : "From Campus Route Three",
+              channelDescription:
+                  "Notification channel for route ${routeNo == 1 ? 'one' : routeNo == 2 ? 'two' : 'three'} departure from campus",
+              // icon: "bu-logo",
+              subText: "My BU",
+              channelShowBadge: false,
+              importance: Importance.max,
+              priority: Priority.high,
+              onlyAlertOnce: true,
+              showProgress: true,
+              maxProgress: nextMaxProgress(routeNo == 1
+                  ? fromCampusAllDateTimeForRouteOne
+                  : routeNo == 2
+                      ? fromCampusAllDateTimeForRouteTwo
+                      : fromCampusAllDateTimeForRouteThree),
+              progress: y,
+            );
+            final NotificationDetails notificationDetails =
+                NotificationDetails(android: androidNotificationDetails);
+            if (routeNo == 1) {
+              await flutterLocalNotificationsPlugin.show(
+                  11,
+                  "Next bus from ${fromCampusRouteOne[indexOfNextSchedule].from} to ${fromCampusRouteOne[indexOfNextSchedule].to}",
+                  "${fromCampusRouteOne[indexOfNextSchedule].buses} departure at ${fromCampusRouteOne[indexOfNextSchedule].hour! > 12 ? fromCampusRouteOne[indexOfNextSchedule].hour! - 12 : fromCampusRouteOne[indexOfNextSchedule].hour} : ${fromCampusRouteOne[indexOfNextSchedule].minute} ${fromCampusRouteOne[indexOfNextSchedule].hour! > 12 ? 'pm' : 'am'}",
+                  notificationDetails,
+                  payload: 'busSchedules');
+              // }
+            } else if (routeNo == 2) {
+              await flutterLocalNotificationsPlugin.show(
+                  21,
+                  "Next bus from ${fromCampusRouteTwo[indexOfNextSchedule].from} to ${fromCampusRouteTwo[indexOfNextSchedule].to}",
+                  "${fromCampusRouteTwo[indexOfNextSchedule].buses} departure at ${fromCampusRouteTwo[indexOfNextSchedule].hour! > 12 ? fromCampusRouteTwo[indexOfNextSchedule].hour! - 12 : fromCampusRouteTwo[indexOfNextSchedule].hour} : ${fromCampusRouteTwo[indexOfNextSchedule].minute} ${fromCampusRouteTwo[indexOfNextSchedule].hour! > 12 ? 'pm' : 'am'}",
+                  notificationDetails,
+                  payload: 'busSchedules');
+            } else {
+              await flutterLocalNotificationsPlugin.show(
+                  31,
+                  "Next bus from ${fromCampusRouteThree[indexOfNextSchedule].from} to ${fromCampusRouteThree[indexOfNextSchedule].to}",
+                  "${fromCampusRouteThree[indexOfNextSchedule].buses} departure at ${fromCampusRouteThree[indexOfNextSchedule].hour! > 12 ? fromCampusRouteThree[indexOfNextSchedule].hour! - 12 : fromCampusRouteThree[indexOfNextSchedule].hour} : ${fromCampusRouteThree[indexOfNextSchedule].minute} ${fromCampusRouteThree[indexOfNextSchedule].hour! > 12 ? 'pm' : 'am'}",
+                  notificationDetails,
+                  payload: 'busSchedules');
+            }
+          });
+        }
+      } else if (DateTime.now() ==
+          ((routeNo == 1
+                  ? fromCampusAllDateTimeForRouteOne[0]
+                  : routeNo == 2
+                      ? fromCampusAllDateTimeForRouteTwo[0]
+                      : fromCampusAllDateTimeForRouteThree[0])
+              .subtract(Duration(minutes: 30)))) {
+        for (int y = 0;
+            y <=
+                (nextMaxProgress(routeNo == 1
+                        ? fromCampusAllDateTimeForRouteOne
+                        : routeNo == 2
+                            ? fromCampusAllDateTimeForRouteTwo
+                            : fromCampusAllDateTimeForRouteThree) +
+                    1);
+            y++) {
+          await Future<void>.delayed(const Duration(minutes: 1), () async {
+            final AndroidNotificationDetails androidNotificationDetails =
+                AndroidNotificationDetails(
+              routeNo == 1
+                  ? "fromCampusRouteOne"
+                  : routeNo == 2
+                      ? "fromCampusRouteTwo"
+                      : "fromCampusRouteThree",
+              routeNo == 1
+                  ? "From Campus Route One"
+                  : routeNo == 2
+                      ? "From Campus Route Two"
+                      : "From Campus Route Three",
+              channelDescription:
+                  "Notification channel for route ${routeNo == 1 ? 'one' : routeNo == 2 ? 'two' : 'three'} departure from campus",
+              // icon: "bu-logo",
+              subText: "My BU",
+              channelShowBadge: false,
+              importance: Importance.max,
+              priority: Priority.high,
+              onlyAlertOnce: true,
+              showProgress: true,
+              maxProgress: nextMaxProgress(routeNo == 1
+                  ? fromCampusAllDateTimeForRouteOne
+                  : routeNo == 2
+                      ? fromCampusAllDateTimeForRouteTwo
+                      : fromCampusAllDateTimeForRouteThree),
+              progress: y,
+            );
+
+            final NotificationDetails notificationDetails =
+                NotificationDetails(android: androidNotificationDetails);
+            if (routeNo == 1) {
+              await flutterLocalNotificationsPlugin.show(
+                  11,
+                  "Next bus from ${fromCampusRouteOne[indexOfNextSchedule].from} to ${fromCampusRouteOne[indexOfNextSchedule].to}",
+                  "${fromCampusRouteOne[indexOfNextSchedule].buses} departure at ${fromCampusRouteOne[indexOfNextSchedule].hour! > 12 ? fromCampusRouteOne[indexOfNextSchedule].hour! - 12 : fromCampusRouteOne[indexOfNextSchedule].hour} : ${fromCampusRouteOne[indexOfNextSchedule].minute} ${fromCampusRouteOne[indexOfNextSchedule].hour! > 12 ? 'pm' : 'am'}",
+                  notificationDetails,
+                  payload: 'busSchedules');
+            } else if (routeNo == 2) {
+              await flutterLocalNotificationsPlugin.show(
+                  21,
+                  "Next bus from ${fromCampusRouteTwo[indexOfNextSchedule].from} to ${fromCampusRouteTwo[indexOfNextSchedule].to}",
+                  "${fromCampusRouteTwo[indexOfNextSchedule].buses} departure at ${fromCampusRouteTwo[indexOfNextSchedule].hour! > 12 ? fromCampusRouteTwo[indexOfNextSchedule].hour! - 12 : fromCampusRouteTwo[indexOfNextSchedule].hour} : ${fromCampusRouteTwo[indexOfNextSchedule].minute} ${fromCampusRouteTwo[indexOfNextSchedule].hour! > 12 ? 'pm' : 'am'}",
+                  notificationDetails,
+                  payload: 'busSchedules');
+            } else {
+              await flutterLocalNotificationsPlugin.show(
+                  31,
+                  "Next bus from ${fromCampusRouteThree[indexOfNextSchedule].from} to ${fromCampusRouteThree[indexOfNextSchedule].to}",
+                  "${fromCampusRouteThree[indexOfNextSchedule].buses} departure at ${fromCampusRouteThree[indexOfNextSchedule].hour! > 12 ? fromCampusRouteThree[indexOfNextSchedule].hour! - 12 : fromCampusRouteThree[indexOfNextSchedule].hour} : ${fromCampusRouteThree[indexOfNextSchedule].minute} ${fromCampusRouteThree[indexOfNextSchedule].hour! > 12 ? 'pm' : 'am'}",
+                  notificationDetails,
+                  payload: 'busSchedules');
+            }
+          });
+        }
+      }
+    }
 }
 
 @pragma('vm:entry-point')
@@ -373,59 +654,125 @@ void onStart(ServiceInstance service) async {
       datas.add(schedule.toJson());
     }
     await GetStorage().write("schedulesForNotificationThread", datas);
+    for (Map<String, dynamic> data in datas) {
+      schedulesForNThread.add(Schedule.fromJson(data));
+    }
+
+    // Route One
+    List<Schedule> routeOne =
+        schedulesForNThread.where((schedule) => schedule.routeNo == 1).toList();
+
+// To Campus
+    List<Schedule> toCampusRouteOne = routeOne
+        .where((schedule) => schedule.to!.toLowerCase() == "campus")
+        .toList();
+
+    for (Schedule schedule in toCampusRouteOne) {
+      toCampusAllDateTimeForRouteOne
+          .add(Converter.int2DateTime(schedule.hour!, schedule.minute!));
+    }
+
+    // From Campus
+
+    List<Schedule> fromCampusRouteOne = routeOne
+        .where((schedule) => schedule.from!.toLowerCase() == "campus")
+        .toList();
+
+    for (Schedule schedule in fromCampusRouteOne) {
+      fromCampusAllDateTimeForRouteOne
+          .add(Converter.int2DateTime(schedule.hour!, schedule.minute!));
+    }
+
+    // Route Two
+    List<Schedule> routeTwo =
+        schedulesForNThread.where((schedule) => schedule.routeNo == 2).toList();
+
+// To Campus
+    List<Schedule> toCampusRouteTwo = routeTwo
+        .where((schedule) => schedule.to!.toLowerCase() == "campus")
+        .toList();
+
+    for (Schedule schedule in toCampusRouteTwo) {
+      toCampusAllDateTimeForRouteTwo
+          .add(Converter.int2DateTime(schedule.hour!, schedule.minute!));
+    }
+
+    // From Campus
+
+    List<Schedule> fromCampusRouteTwo = routeOne
+        .where((schedule) => schedule.from!.toLowerCase() == "campus")
+        .toList();
+
+    for (Schedule schedule in fromCampusRouteTwo) {
+      fromCampusAllDateTimeForRouteTwo
+          .add(Converter.int2DateTime(schedule.hour!, schedule.minute!));
+    }
+
+    // Route Three
+    List<Schedule> routeThree =
+        schedulesForNThread.where((schedule) => schedule.routeNo == 3).toList();
+
+    // To Campus
+    List<Schedule> toCampusRouteThree = routeThree
+        .where((schedule) => schedule.to!.toLowerCase() == "campus")
+        .toList();
+
+    for (Schedule schedule in toCampusRouteThree) {
+      toCampusAllDateTimeForRouteThree
+          .add(Converter.int2DateTime(schedule.hour!, schedule.minute!));
+    }
+
+    // From Campus
+
+    List<Schedule> fromCampusRouteThree = routeThree
+        .where((schedule) => schedule.from!.toLowerCase() == "campus")
+        .toList();
+
+    for (Schedule schedule in fromCampusRouteThree) {
+      fromCampusAllDateTimeForRouteThree
+          .add(Converter.int2DateTime(schedule.hour!, schedule.minute!));
+    }
+  });
+
+  service.on("routeOne").listen((event) async {
+    var datas = GetStorage().read("schedulesForNotificationThread");
+    List<Schedule> schedulesForNThread = [];
     if (datas != null) {
       for (Map<String, dynamic> data in datas) {
         schedulesForNThread.add(Schedule.fromJson(data));
       }
     }
-    
-    // Route One
-  List<Schedule> routeOne =
-      schedulesForNThread.where((schedule) => schedule.routeNo == 1).toList();
-
-  for (Schedule schedule in routeOne) {
-    allDateTimeForRouteOne
-        .add(Converter.int2DateTime(schedule.hour!, schedule.minute!));
-
-    // print(Converter.dateTime2minute(allDateTime[0], allDateTime[1]));
-    // for (int x = 0; x < (allDateTime.length - 1); x++) {
-    //   times.add(Converter.dateTime2minute(allDateTime[x], allDateTime[x + 1]));
-    // }
-  }
-
+    while (true) {
+    await toCampusNotification(schedulesForNThread, 1);
+    await fromCampusNotification(schedulesForNThread, 1);
+    }
   });
 
-  
+  service.on("routeTwo").listen((event) async {
+    var datas = GetStorage().read("schedulesForNotificationThread");
+    List<Schedule> schedulesForNThread = [];
+    if (datas != null) {
+      for (Map<String, dynamic> data in datas) {
+        schedulesForNThread.add(Schedule.fromJson(data));
+      }
+    }
+    // while (true) {
+    await toCampusNotification(schedulesForNThread, 2);
+    await fromCampusNotification(schedulesForNThread, 2);
+    // }
+  });
 
-  print("allDateTimeForRouteOne onStart: $allDateTimeForRouteOne");
-
-  service.on("routeOne").listen((event) async {
-    print("schedulesForNThread: $schedulesForNThread");
-    await showProgressNotification(schedulesForNThread,1);
-    // var datas = GetStorage().read("schedulesForNotificationThread");
-
-    // int test = Converter.dateTime2minute(
-    //     allDateTimeForRouteOne[0], allDateTimeForRouteOne[1]);
-
-    // print("timesForRouteOne: $timesForRouteOne");
-
-    // print(allDateTimeForRouteOne);
-
-    // print(test);
-
-    // int i = 0;
-    // print("start notification");
-    // print("start noti: $i");
-    // while (i < timesForRouteOne.length) {
-    //   await showProgressNotification(schedulesForNThread).then((_) {
-    //     i++;
-    //   });
-    // .then((_) async {
-    //   if (i == timesForRouteOne.length) {
-    //     await cancelLastNotifications(1);
-
-    //   }
-    // });
+  service.on("routeThree").listen((event) async {
+    var datas = GetStorage().read("schedulesForNotificationThread");
+    List<Schedule> schedulesForNThread = [];
+    if (datas != null) {
+      for (Map<String, dynamic> data in datas) {
+        schedulesForNThread.add(Schedule.fromJson(data));
+      }
+    }
+    // while (true) {
+    await toCampusNotification(schedulesForNThread, 3);
+    await fromCampusNotification(schedulesForNThread, 3);
     // }
   });
 

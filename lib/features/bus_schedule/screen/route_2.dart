@@ -1,5 +1,6 @@
 import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart' as n;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_switch/flutter_switch.dart';
@@ -11,6 +12,7 @@ import 'package:velocity_x/velocity_x.dart';
 import '../../../models/schedule.dart';
 import '../../../theme/theme/app_color.dart';
 import '../../home/screen/home_screen.dart';
+import '../controller/bus_schedule_controller.dart';
 import '../repository/bus_schedule_repository.dart';
 
 class RouteTwo extends ConsumerWidget {
@@ -18,14 +20,45 @@ class RouteTwo extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    // var datas = ref.watch(providerOfBusSchedules);
-    // List<Schedule> schedules = [];
-    // for (Map<String, dynamic> data in datas) {
-    //   schedules.add(Schedule.fromJson(data));
-    // }
+    final busScheduleController = ref.watch(providerOfBusScheduleController);
+    var datas = ref.watch(providerOfBusSchedules);
+    List<Schedule> schedules = [];
+    if(datas != null){
+    for (Map<String, dynamic> data in datas) {
+      schedules.add(Schedule.fromJson(data));
+    }}
     List<Schedule> routeTwo =
         schedules.where((schedule) => schedule.routeNo == 2).toList();
-    return Column(
+    return schedules.length < 2
+        ? Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Spacer(),
+              "There is no bus schedules! Please"
+                  .text
+                  .xl
+                  .bold
+                  .color(AppColors.kSkyBlue)
+                  .make(),
+              TextButton(
+                style: ButtonStyle(
+                  backgroundColor: MaterialStatePropertyAll(AppColors.kSkyBlue),
+                ),
+                onPressed: () {
+                  busScheduleController.getAllSchedules(
+                      context: context, ref: ref);
+                      FlutterBackgroundService().invoke("download");
+                },
+                child: Text(
+                  "Download it",
+                  style: TextStyle(
+                      fontWeight: FontWeight.bold, color: Colors.black),
+                ),
+              ),
+              Spacer(),
+            ],
+          )
+        : Column(
       children: [
         Expanded(
           flex: 2,
@@ -43,27 +76,31 @@ class RouteTwo extends ConsumerWidget {
                   "Notification",
                   style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
                 ),
-                10.heightBox,
-                FlutterSwitch(
-                  width: 100,
-                  height: 40,
-                  valueFontSize: 20.0,
-                  toggleSize: 45.0,
-                  value: ref.watch(providerOfNotificationForRouteTwo),
-                  borderRadius: 30.0,
-                  padding: 8.0,
-                  showOnOff: true,
-                  activeColor: AppColors.kSkyBlue,
-                  inactiveColor: AppColors.kLightRed,
-                  activeTextColor: Colors.white,
-                  inactiveTextColor: Colors.white,
-                  onToggle: (val) {
-                    ref
-                        .read(providerOfNotificationForRouteTwo.notifier)
-                        .update((state) => !state);
-                    GetStorage().write("notificationForRouteTwo", val);
-                  },
-                ),
+                10.heightBox,FlutterSwitch(
+                        width: 100,
+                        height: 40,
+                        valueFontSize: 20,
+                        toggleSize: 45.0,
+                        value: ref.watch(providerOfNotificationForRouteOne),
+                        borderRadius: 30.0,
+                        padding: 8.0,
+                        showOnOff: true,
+                        activeColor: AppColors.kSkyBlue,
+                        inactiveColor: AppColors.kLightRed,
+                        activeTextColor: Colors.black,
+                        inactiveTextColor: Colors.black,
+                        activeToggleColor: Colors.black,
+                        inactiveToggleColor: Colors.black,
+                        onToggle: (val) {
+                          ref
+                              .read(providerOfNotificationForRouteTwo.notifier)
+                              .update((state) => !state);
+                          GetStorage().write("notificationForRouteTwo", val);
+                          val
+                              ? FlutterBackgroundService().invoke("routeTwo")
+                              : FlutterBackgroundService().invoke("cancel");
+                        },
+                      ),
                 20.heightBox,
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,

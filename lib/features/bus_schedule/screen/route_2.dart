@@ -12,6 +12,7 @@ import 'package:velocity_x/velocity_x.dart';
 import '../../../models/schedule.dart';
 import '../../../theme/theme/app_color.dart';
 import '../../home/screen/home_screen.dart';
+import '../../notification/controller/new_notification_controller.dart';
 import '../controller/bus_schedule_controller.dart';
 import '../repository/bus_schedule_repository.dart';
 
@@ -96,9 +97,12 @@ class RouteTwo extends ConsumerWidget {
                               .read(providerOfNotificationForRouteTwo.notifier)
                               .update((state) => !state);
                           GetStorage().write("notificationForRouteTwo", val);
-                          val
-                              ? FlutterBackgroundService().invoke("routeTwo")
-                              : FlutterBackgroundService().invoke("cancel");
+                          if (val) {
+                            NewNotificationController()
+                                .scheduleNotification(routeTwo);
+                          } else {
+                            NewNotificationController().cancelNotification(routeTwo);
+                          }
                         },
                       ),
                 20.heightBox,

@@ -5,6 +5,7 @@ import 'package:flutter_neumorphic/flutter_neumorphic.dart' as n;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_switch/flutter_switch.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:mybu/features/notification/controller/new_notification_controller.dart';
 import 'package:timeline_tile/timeline_tile.dart';
 import 'package:velocity_x/velocity_x.dart';
 
@@ -33,6 +34,12 @@ class RouteOne extends ConsumerWidget {
     print("Schedules in Route one page: $schedules");
     List<Schedule> routeOne =
         schedules.where((schedule) => schedule.routeNo == 1).toList();
+    List<Schedule> fromCampusRouteOne = routeOne
+        .where((schedule) => schedule.from!.toLowerCase() == "campus")
+        .toList();
+    List<Schedule> toCampusRouteOne = routeOne
+        .where((schedule) => schedule.to!.toLowerCase() == "campus")
+        .toList();
 
     return schedules.length < 2
         ? Column(
@@ -52,7 +59,7 @@ class RouteOne extends ConsumerWidget {
                 onPressed: () {
                   busScheduleController.getAllSchedules(
                       context: context, ref: ref);
-                      FlutterBackgroundService().invoke("download");
+                  FlutterBackgroundService().invoke("download");
                 },
                 child: Text(
                   "Download it",
@@ -104,9 +111,12 @@ class RouteOne extends ConsumerWidget {
                               .read(providerOfNotificationForRouteOne.notifier)
                               .update((state) => !state);
                           GetStorage().write("notificationForRouteOne", val);
-                          val
-                              ? FlutterBackgroundService().invoke("routeOne")
-                              : FlutterBackgroundService().invoke("cancel");
+                          if (val) {
+                            NewNotificationController()
+                                .scheduleNotification(routeOne);
+                          } else {
+                            NewNotificationController().cancelNotification(routeOne);
+                          }
                         },
                       ),
                       20.heightBox,

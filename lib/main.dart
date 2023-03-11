@@ -82,7 +82,7 @@ FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await initializeService();
+  // await initializeService();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   await _configureLocalTimeZone();
   await GetStorage.init();

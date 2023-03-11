@@ -12,6 +12,7 @@ import 'package:velocity_x/velocity_x.dart';
 import '../../../models/schedule.dart';
 import '../../../theme/theme/app_color.dart';
 import '../../home/screen/home_screen.dart';
+import '../../notification/controller/new_notification_controller.dart';
 import '../controller/bus_schedule_controller.dart';
 import '../repository/bus_schedule_repository.dart';
 
@@ -101,9 +102,12 @@ class RouteThree extends ConsumerWidget {
                                   providerOfNotificationForRouteThree.notifier)
                               .update((state) => !state);
                           GetStorage().write("notificationForRouteThree", val);
-                          val
-                              ? FlutterBackgroundService().invoke("routeThree")
-                              : FlutterBackgroundService().invoke("cancel");
+                          if (val) {
+                            NewNotificationController()
+                                .scheduleNotification(routeThree);
+                          } else {
+                            NewNotificationController().cancelNotification(routeThree);
+                          }
                         },
                       ),
                       20.heightBox,

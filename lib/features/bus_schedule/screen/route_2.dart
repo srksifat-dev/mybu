@@ -5,13 +5,11 @@ import 'package:flutter_neumorphic/flutter_neumorphic.dart' as n;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_switch/flutter_switch.dart';
 import 'package:get_storage/get_storage.dart';
-import 'package:mybu/features/notification/controller/notification_controller.dart';
 import 'package:timeline_tile/timeline_tile.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 import '../../../models/schedule.dart';
 import '../../../theme/theme/app_color.dart';
-import '../../home/screen/home_screen.dart';
 import '../../notification/controller/new_notification_controller.dart';
 import '../controller/bus_schedule_controller.dart';
 import '../repository/bus_schedule_repository.dart';
@@ -112,13 +110,36 @@ class RouteTwo extends ConsumerWidget {
                   children: [
                     SizedBox(
                         width: context.percentWidth * 33,
-                        child: "নতুন বাজার".text.bold.white.xl2.makeCentered()),
+                        child: "নতুন বাজার".text.bold.xl2.makeCentered()),
                     SizedBox(
-                        width: context.percentWidth * 33,
-                        child: "⇄".text.bold.white.xl2.makeCentered()),
+                              width: context.percentWidth * 33,
+                              height: 30,
+                              child: Stack(
+                                alignment: Alignment.center,
+                                children: [
+                                  Positioned(
+                                    top: -4,
+                                    child: "→"
+                                        .text
+                                        .bold
+                                        .color(AppColors.kSkyBlue)
+                                        .xl2
+                                        .makeCentered(),
+                                  ),
+                                  Positioned(
+                                    bottom: -4,
+                                    child: "←"
+                                        .text
+                                        .bold
+                                        .color(AppColors.kLightRed)
+                                        .xl2
+                                        .makeCentered(),
+                                  ),
+                                ],
+                              ),),
                     SizedBox(
                       width: context.percentWidth * 33,
-                      child: "বিশ্ববিদ্যালয়".text.bold.white.xl2.makeCentered(),
+                      child: "বিশ্ববিদ্যালয়".text.bold.xl2.makeCentered(),
                     ),
                   ],
                 ),
@@ -143,61 +164,6 @@ class RouteTwo extends ConsumerWidget {
               child: ListView.builder(
                       itemCount: routeTwo.length,
                       itemBuilder: (context, index) {
-                        final DateTime dateTime = DateTime.parse(
-                            "0000-00-00 ${TimeFormat.tWith0(routeTwo[index].hour!)}:${TimeFormat.tWith0(routeTwo[index].minute!)}:00");
-                        int hour = routeTwo[index].hour!;
-                        bool am = false;
-                        if (hour < 12) {
-                          am = true;
-                        } else {
-                          am = false;
-                        }
-                        DateTime notificationDateTime =
-                            dateTime.subtract(const Duration(minutes: 10));
-                        int notificationHour = notificationDateTime.hour;
-                        int notificationMinute = notificationDateTime.minute;
-                        String stringHour = TimeFormat.tWith0(hour);
-                        String stringMinute =
-                            TimeFormat.tWith0(routeTwo[index].minute!);
-                        switch (routeTwo[index].hour) {
-                          case 13:
-                            stringHour = "01";
-                            break;
-                          case 14:
-                            stringHour = "02";
-                            break;
-                          case 15:
-                            stringHour = "03";
-                            break;
-                          case 16:
-                            stringHour = "04";
-                            break;
-                          case 17:
-                            stringHour = "05";
-                            break;
-                          case 18:
-                            stringHour = "06";
-                            break;
-                          case 19:
-                            stringHour = "07";
-                            break;
-                          case 20:
-                            stringHour = "08";
-                            break;
-                          case 21:
-                            stringHour = "09";
-                            break;
-                          case 22:
-                            stringHour = "10";
-                            break;
-                          case 23:
-                            stringHour = "11";
-                            break;
-                          case 00:
-                            stringHour = "12";
-                            break;
-                          default:
-                        }
                         return Padding(
                             padding:
                                 const EdgeInsets.symmetric(horizontal: 16.0),
@@ -215,12 +181,19 @@ class RouteTwo extends ConsumerWidget {
                                         color: AppColors.kLightGray,
                                         borderRadius: BorderRadius.circular(5)),
                                     child:
-                                        "$stringHour:$stringMinute ${am ? 'am' : 'pm'}"
-                                            .text
-                                            .size(10)
-                                            .bold
-                                            .black
-                                            .makeCentered(),
+                                        routeTwo[index].minute == 00
+                                  ? "${routeTwo[index].hour! > 12 ? routeTwo[index].hour! - 12 : routeTwo[index].hour} : ${routeTwo[index].minute}0 ${routeTwo[index].hour! >= 12 ? 'pm' : 'am'}"
+                                      .text
+                                      .size(10)
+                                      .bold
+                                      .black
+                                      .makeCentered()
+                                  : "${routeTwo[index].hour! > 12 ? routeTwo[index].hour! - 12 : routeTwo[index].hour} : ${routeTwo[index].minute} ${routeTwo[index].hour! >= 12 ? 'pm' : 'am'}"
+                                      .text
+                                      .size(10)
+                                      .bold
+                                      .black
+                                      .makeCentered(),
                                   ),
                                 ),
                               ),
@@ -235,7 +208,7 @@ class RouteTwo extends ConsumerWidget {
                                         margin: const EdgeInsets.symmetric(
                                             horizontal: 5, vertical: 30),
                                         padding: const EdgeInsets.symmetric(
-                                            horizontal: 5, vertical: 3),
+                                            horizontal: 5, vertical: 10),
                                         // height: context.percentWidth * 10,
                                         // width: context.percentWidth * 10,
                                         decoration: BoxDecoration(
@@ -273,7 +246,7 @@ class RouteTwo extends ConsumerWidget {
                                         margin: const EdgeInsets.symmetric(
                                             horizontal: 5, vertical: 30),
                                         padding: const EdgeInsets.symmetric(
-                                            horizontal: 5, vertical: 3),
+                                            horizontal: 5, vertical: 10),
                                         // height: context.percentWidth * 10,
                                         // width: context.percentWidth * 10,
                                         decoration: BoxDecoration(

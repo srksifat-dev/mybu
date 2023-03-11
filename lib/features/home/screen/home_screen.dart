@@ -151,17 +151,18 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
               ),
             ),
             Container(
-                height: 50,
+                width: context.percentWidth * 100,
                 color: AppColors.kSkyBlue,
-                child: Row(
+                child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    "For any queries,".text.black.bold.xl.make(),
+                    10.heightBox,
+                    "For any query or suggestion".text.black.bold.xl.make(),
                     TextButton(
                         onPressed: () {
                           ContactController.mail("srksifat.dev@gmail.com");
                         },
-                        child: "contact with developer."
+                        child: "contact with developer"
                             .text
                             .xl
                             .bold

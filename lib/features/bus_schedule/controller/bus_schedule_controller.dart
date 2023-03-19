@@ -4,6 +4,7 @@ import 'package:get_storage/get_storage.dart';
 
 import '../../../common/my_snackbar.dart';
 import '../../../models/schedule.dart';
+import '../../home/screen/home_screen.dart';
 import '../repository/bus_schedule_repository.dart';
 
 final providerOfBusScheduleController = Provider((ref) {
@@ -21,24 +22,65 @@ class BusScheduleController {
 
   Future<void> getAllSchedules(
       {required BuildContext context, required WidgetRef ref}) async {
-   final String? versionLocal = GetStorage().read("version") as String?;
+    final String? versionLocal = GetStorage().read("version") as String?;
     final String versionDatabase = await getVersion(context);
     if (versionLocal == null || versionLocal != versionDatabase) {
       try {
-        List<Map<String, dynamic>> schedules = [];
-        var data = await busScheduleRepo.firestore
-            .collection("schedules").orderBy("id")
+        List<Map<String, dynamic>> schedulesData = [];
+        List<Schedule> schedules = [];
+        var datas = await busScheduleRepo.firestore
+            .collection("schedules")
+            .orderBy("id")
             .get()
             .then((value) =>
                 value.docs.map((e) => Schedule.fromJson(e.data())).toList());
-        for (Schedule schedule in data) {
-          schedules.add(schedule.toJson());
+        for (Schedule schedule in datas) {
+          schedulesData.add(schedule.toJson());
         }
-        await GetStorage().write("schedules", schedules);
-        ref.read(providerOfBusSchedules.notifier).update((state) => schedules);
-        mySnackbar(
-            context, "Your Bus Schedules have been downloaded successfully!");
+        await GetStorage().write("schedules", schedulesData);
+        ref
+            .read(providerOfBusSchedules.notifier)
+            .update((state) => schedulesData);
         GetStorage().write("version", versionDatabase);
+
+        for (Map<String, dynamic> data in schedulesData) {
+          schedules.add(Schedule.fromJson(data));
+        }
+        for (Schedule schedule in schedules) {
+          switch (schedule.routeNo) {
+            case 1:
+              routeOne.add(schedule);
+              break;
+            case 2:
+              routeTwo.add(schedule);
+              break;
+            case 3:
+              routeThree.add(schedule);
+              break;
+            default:
+          }
+        }
+        for (Schedule schedule in routeOne) {
+          if (schedule.from!.toLowerCase() == "campus") {
+            fromCampusRouteOne.add(schedule);
+          } else {
+            toCampusRouteOne.add(schedule);
+          }
+        }
+        for (Schedule schedule in routeTwo) {
+          if (schedule.from!.toLowerCase() == "campus") {
+            fromCampusRouteTwo.add(schedule);
+          } else {
+            toCampusRouteTwo.add(schedule);
+          }
+        }
+        for (Schedule schedule in routeThree) {
+          if (schedule.from!.toLowerCase() == "campus") {
+            fromCampusRouteThree.add(schedule);
+          } else {
+            toCampusRouteThree.add(schedule);
+          }
+        }
       } catch (error) {
         // showing error message
         mySnackbar(context, "Something wrong. Please try again!");

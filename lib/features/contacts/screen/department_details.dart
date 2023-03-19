@@ -50,7 +50,7 @@ class _DepartmentDetailsState extends State<DepartmentDetails> {
                 padding: const EdgeInsets.only(left: 16),
                 height: 80,
                 decoration: BoxDecoration(
-                  color: Colors.amber,
+                  color: Vx.randomColor,
                   borderRadius: BorderRadius.circular(16),
                 ),
                 child: Row(

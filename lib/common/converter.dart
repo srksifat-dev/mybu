@@ -1,6 +1,4 @@
-import 'package:intl/intl.dart';
-
-class Converter {
+class AppConverter {
   static DateTime int2DateTime(int hour, int minute) {
     return DateTime(DateTime.now().year,DateTime.now().month,DateTime.now().day,hour,minute);
   }

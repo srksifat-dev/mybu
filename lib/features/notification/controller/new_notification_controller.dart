@@ -17,7 +17,6 @@ class NewNotificationController {
       FlutterLocalNotificationsPlugin();
 
   Future<void> scheduleNotification(List<Schedule> schedules) async {
-    print("Schedule Notification");
     for (Schedule schedule in schedules) {
       tz.TZDateTime nextInstanceOfTime() {
         final tz.TZDateTime now = tz.TZDateTime.now(tz.local);
@@ -26,23 +25,28 @@ class NewNotificationController {
         if (scheduledDate.isBefore(now)) {
           scheduledDate = scheduledDate.add(const Duration(days: 1));
         }
-        return scheduledDate;
+        return scheduledDate.subtract(const Duration(minutes: 10));
       }
 
       await flutterLocalNotificationsPlugin.zonedSchedule(
           schedule.id!,
           "from ${schedule.from} to ${schedule.to}",
-          schedule.minute == 00 ? "${schedule.buses} departure @ ${schedule.hour! > 12 ? schedule.hour! - 12 : schedule.hour} : ${schedule.minute}0 ${schedule.hour! >= 12 ? 'pm' : 'am'}" : "${schedule.buses} departure @ ${schedule.hour! > 12 ? schedule.hour! - 12 : schedule.hour} : ${schedule.minute} ${schedule.hour! >= 12 ? 'pm' : 'am'}",
+          schedule.minute == 00
+              ? "${schedule.buses} departure @ ${schedule.hour! > 12 ? schedule.hour! - 12 : schedule.hour} : ${schedule.minute}0 ${schedule.hour! >= 12 ? 'pm' : 'am'}"
+              : "${schedule.buses} departure @ ${schedule.hour! > 12 ? schedule.hour! - 12 : schedule.hour} : ${schedule.minute} ${schedule.hour! >= 12 ? 'pm' : 'am'}",
           nextInstanceOfTime(),
           NotificationDetails(
             android: AndroidNotificationDetails(
-                schedule.from!.toLowerCase() == "campus"
-                    ? "${schedule.routeNo.toString()}1"
-                    : schedule.routeNo!.toString(),
-                schedule.from!.toLowerCase() == "campus"
-                    ? "From Campus ${schedule.routeNo}"
-                    : "To Campus ${schedule.routeNo}",
-                channelDescription: "Bus notification"),
+              schedule.from!.toLowerCase() == "campus"
+                  ? "${schedule.routeNo.toString()}1"
+                  : schedule.routeNo!.toString(),
+              schedule.from!.toLowerCase() == "campus"
+                  ? "From Campus ${schedule.routeNo}"
+                  : "To Campus ${schedule.routeNo}",
+              channelDescription: "Bus notification",
+              icon: "@mipmap/launcher_icon",
+              importance: Importance.max,
+            ),
           ),
           androidAllowWhileIdle: true,
           uiLocalNotificationDateInterpretation:
@@ -52,10 +56,8 @@ class NewNotificationController {
   }
 
   Future<void> cancelNotification(List<Schedule> schedules) async {
-    print("Cancel Notification");
-    for(Schedule schedule in schedules){
+    for (Schedule schedule in schedules) {
       flutterLocalNotificationsPlugin.cancel(schedule.id!);
     }
-    
   }
 }

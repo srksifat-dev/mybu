@@ -5,13 +5,12 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_background_service/flutter_background_service.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_timezone/flutter_timezone.dart';
 import 'package:get_storage/get_storage.dart';
-import 'package:mybu/features/notification/controller/notification_controller.dart';
 import 'package:mybu/firebase_options.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:timezone/data/latest_all.dart' as tz;
 import 'package:timezone/timezone.dart' as tz;
 
@@ -47,23 +46,9 @@ const String urlLaunchActionId = 'id_1';
 /// A notification action which triggers a App navigation event
 const String navigationActionId = 'id_3';
 
-/// Defines a iOS/MacOS notification category for text input actions.
-const String darwinNotificationCategoryText = 'textCategory';
-
-/// Defines a iOS/MacOS notification category for plain actions.
-const String darwinNotificationCategoryPlain = 'plainCategory';
-
 @pragma('vm:entry-point')
 void notificationTapBackground(NotificationResponse notificationResponse) {
-  // ignore: avoid_print
-  print('notification(${notificationResponse.id}) action tapped: '
-      '${notificationResponse.actionId} with'
-      ' payload: ${notificationResponse.payload}');
-  if (notificationResponse.input?.isNotEmpty ?? false) {
-    // ignore: avoid_print
-    print(
-        'notification action tapped with input: ${notificationResponse.input}');
-  }
+  if (notificationResponse.input?.isNotEmpty ?? false) {}
 }
 
 Future<void> _configureLocalTimeZone() async {
@@ -71,8 +56,8 @@ Future<void> _configureLocalTimeZone() async {
     return;
   }
   tz.initializeTimeZones();
-  final String? timeZoneName = await FlutterTimezone.getLocalTimezone();
-  tz.setLocalLocation(tz.getLocation(timeZoneName!));
+  final String timeZoneName = await FlutterTimezone.getLocalTimezone();
+  tz.setLocalLocation(tz.getLocation(timeZoneName));
 }
 
 int? installed;
@@ -104,17 +89,17 @@ Future<void> main() async {
           Platform.isLinux
       ? null
       : await flutterLocalNotificationsPlugin.getNotificationAppLaunchDetails();
-  // String initialRoute = HomeScreen();
+  String initialRoute = const HomeScreen().route;
   if (notificationAppLaunchDetails?.didNotificationLaunchApp ?? false) {
     selectedNotificationPayload =
         notificationAppLaunchDetails!.notificationResponse?.payload;
-    // initialRoute = SecondPage.routeName;
+    initialRoute = const BusScheduleScreen(payload: "busSchedule").routeName;
   }
 
   const AndroidInitializationSettings initializationSettingsAndroid =
-      AndroidInitializationSettings('launch_background');
+      AndroidInitializationSettings('@mipmap/launcher_icon');
 
-  final InitializationSettings initializationSettings = InitializationSettings(
+  const InitializationSettings initializationSettings = InitializationSettings(
     android: initializationSettingsAndroid,
     // iOS: initializationSettingsDarwin,
     // macOS: initializationSettingsDarwin,
@@ -139,6 +124,9 @@ Future<void> main() async {
     onDidReceiveBackgroundNotificationResponse: notificationTapBackground,
   );
 
+  await Permission.phone.request();
+  await Permission.notification.request();
+
   runApp(const ProviderScope(child: MyApp()));
 }
 
@@ -158,8 +146,8 @@ class _MyAppState extends State<MyApp> {
   bool _notificationsEnabled = false;
   @override
   void initState() {
-    _isAndroidPermissionGranted();
-    _requestPermissions();
+    // _isAndroidPermissionGranted();
+    // _requestPermissions();
     _configureDidReceiveLocalNotificationSubject();
     _configureSelectNotificationSubject();
 
@@ -230,7 +218,7 @@ class _MyAppState extends State<MyApp> {
                 await Navigator.of(context).push(
                   MaterialPageRoute<void>(
                     builder: (BuildContext context) =>
-                        BusScheduleScreen(payload: "payload"),
+                        const BusScheduleScreen(payload: "busSchedule"),
                   ),
                 );
               },

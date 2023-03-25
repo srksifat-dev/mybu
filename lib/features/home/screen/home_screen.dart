@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:mybu/common/converter.dart';
 import 'package:velocity_x/velocity_x.dart';
 
 import '../../../models/schedule.dart';
@@ -46,6 +47,10 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     var notificationForRouteThree =
         GetStorage().read("notificationForRouteThree");
 
+    var subtractedTimeRouteOne = GetStorage().read("timeForRouteOne");
+    var subtractedTimeRouteTwo = GetStorage().read("timeForRouteTwo");
+    var subtractedTimeRouteThree = GetStorage().read("timeForRouteThree");
+
     if (datas != null) {
       for (Map<String, dynamic> data in datas) {
         schedules.add(Schedule.fromJson(data));
@@ -89,19 +94,22 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
 
     if (notificationForRouteOne != null) {
       if (notificationForRouteOne) {
-        NewNotificationController().scheduleNotification(routeOne);
+        NewNotificationController()
+            .scheduleNotification(routeOne, subtractedTimeRouteOne);
       }
     }
 
     if (notificationForRouteTwo != null) {
       if (notificationForRouteTwo) {
-        NewNotificationController().scheduleNotification(routeTwo);
+        NewNotificationController()
+            .scheduleNotification(routeTwo, subtractedTimeRouteTwo);
       }
     }
 
     if (notificationForRouteThree != null) {
       if (notificationForRouteThree) {
-        NewNotificationController().scheduleNotification(routeThree);
+        NewNotificationController()
+            .scheduleNotification(routeThree, subtractedTimeRouteThree);
       }
     }
     super.initState();
@@ -118,6 +126,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
 
     return SafeArea(
       child: Scaffold(
+        resizeToAvoidBottomInset: false,
         body: Column(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
@@ -125,15 +134,45 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
               child: Column(
                 children: [
                   const CustomImageSlider(),
-                  datas.length < 2
-                      ? Container()
-                      : Row(
+                   datas.length > 2 ?
+
+                                   
+                                   Row(
                           children: ["Next Schedules".text.bold.xl2.make()],
-                        ).pOnly(left: 16, bottom: 8),
+                        ).pOnly(left: 16, bottom: 8) : Container(),
                   datas.length < 2
                       ? Container()
-                      : DateTime.now().isAfter(DateTime(DateTime.now().year,
-                              DateTime.now().month, DateTime.now().day, 21, 30))
+                      : DateTime(DateTime.now().year,
+                                  DateTime.now().month,
+                                  DateTime.now().day).weekday == DateTime.friday || DateTime(DateTime.now().year,
+                                  DateTime.now().month,
+                                  DateTime.now().day).weekday == DateTime.saturday ?
+                                  Container(
+                              height: context.percentHeight * 13,
+                              width: context.percentWidth * 100,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(16),
+                                color: AppColors.kSkyBlue.withOpacity(0.3),
+                              ),
+                              child: "Today is your weekend, so stay relax!"
+                                  .toString()
+                                  .text
+                                  .xl
+                                  .bold
+                                  .makeCentered(),
+                            ).px(16) :
+                                   DateTime.now().isAfter(DateTime(
+                                  DateTime.now().year,
+                                  DateTime.now().month,
+                                  DateTime.now().day,
+                                  21,
+                                  30)) ||
+                              DateTime.now().isAtSameMomentAs(DateTime(
+                                  DateTime.now().year,
+                                  DateTime.now().month,
+                                  DateTime.now().day,
+                                  21,
+                                  30))
                           ? Container(
                               height: context.percentHeight * 13,
                               width: context.percentWidth * 100,
@@ -149,69 +188,64 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                                   .makeCentered(),
                             ).px(16)
                           : SizedBox(
-                              height: context.percentHeight * 13,
+                              height: context.percentHeight * 20,
                               width: context.percentWidth * 100,
                               child: ListView.builder(
                                 scrollDirection: Axis.horizontal,
                                 itemBuilder: (context, index) {
                                   switch (index) {
                                     case 0:
-                                      return DateTime.now().isAfter(DateTime(
-                                              DateTime.now().year,
-                                              DateTime.now().month,
-                                              DateTime.now().day,
-                                              21,
-                                              30))
+                                      return DateTime.now().isAfter(
+                                              AppConverter.int2DateTime(
+                                                  toCampusRouteOne.last.hour!,
+                                                  toCampusRouteOne
+                                                      .last.minute!))
                                           ? Container()
                                           : NextSchedule(
                                               toCampusRouteOne, index);
                                     case 1:
-                                      return DateTime.now().isAfter(DateTime(
-                                              DateTime.now().year,
-                                              DateTime.now().month,
-                                              DateTime.now().day,
-                                              16,
-                                              15))
+                                      return DateTime.now().isAfter(
+                                              AppConverter.int2DateTime(
+                                                  fromCampusRouteOne.last.hour!,
+                                                  fromCampusRouteOne
+                                                      .last.minute!))
                                           ? Container()
                                           : NextSchedule(
                                               fromCampusRouteOne, index);
                                     case 2:
-                                      return DateTime.now().isAfter(DateTime(
-                                              DateTime.now().year,
-                                              DateTime.now().month,
-                                              DateTime.now().day,
-                                              15,
-                                              40))
+                                      return DateTime.now().isAfter(
+                                              AppConverter.int2DateTime(
+                                                  toCampusRouteTwo.last.hour!,
+                                                  toCampusRouteTwo
+                                                      .last.minute!))
                                           ? Container()
                                           : NextSchedule(
                                               toCampusRouteTwo, index);
                                     case 3:
-                                      return DateTime.now().isAfter(DateTime(
-                                              DateTime.now().year,
-                                              DateTime.now().month,
-                                              DateTime.now().day,
-                                              16,
-                                              15))
+                                      return DateTime.now().isAfter(
+                                              AppConverter.int2DateTime(
+                                                  fromCampusRouteTwo.last.hour!,
+                                                  fromCampusRouteTwo
+                                                      .last.minute!))
                                           ? Container()
                                           : NextSchedule(
                                               fromCampusRouteTwo, index);
                                     case 4:
-                                      return DateTime.now().isAfter(DateTime(
-                                              DateTime.now().year,
-                                              DateTime.now().month,
-                                              DateTime.now().day,
-                                              21,
-                                              30))
+                                      return DateTime.now().isAfter(
+                                              AppConverter.int2DateTime(
+                                                  toCampusRouteThree.last.hour!,
+                                                  toCampusRouteThree
+                                                      .last.minute!))
                                           ? Container()
                                           : NextSchedule(
                                               toCampusRouteThree, index);
                                     case 5:
-                                      return DateTime.now().isAfter(DateTime(
-                                              DateTime.now().year,
-                                              DateTime.now().month,
-                                              DateTime.now().day,
-                                              16,
-                                              15))
+                                      return DateTime.now().isAfter(
+                                              AppConverter.int2DateTime(
+                                                  fromCampusRouteThree
+                                                      .last.hour!,
+                                                  fromCampusRouteThree
+                                                      .last.minute!))
                                           ? Container()
                                           : NextSchedule(
                                               fromCampusRouteThree, index);
@@ -221,7 +255,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                                 },
                                 itemCount: 6,
                               ),
-                            ),
+                            ) ,
+                  20.heightBox,
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
@@ -320,7 +355,6 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
             ),
             Container(
                 width: context.percentWidth * 100,
-                height: context.percentHeight * 9,
                 color: AppColors.kSkyBlue,
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,

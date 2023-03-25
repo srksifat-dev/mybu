@@ -12,6 +12,11 @@ final providerOfBusScheduleController = Provider((ref) {
   return BusScheduleController(busScheduleRepo: busScheduleRepo, ref: ref);
 });
 
+final StateProvider<bool> providerOfEnlarged =
+    StateProvider((ref) => GetStorage().read("enlarged") ?? false);
+final StateProvider<int> providerOfTabIndex =
+    StateProvider((ref) => GetStorage().read("tabIndex")?? 0) ;
+
 class BusScheduleController {
   final BusScheduleRepository busScheduleRepo;
   final ProviderRef ref;

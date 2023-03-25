@@ -75,15 +75,25 @@ Future<void> main() async {
   if (installed == null) {
     GetStorage().write("schedules", <Map<String, dynamic>>[]);
   }
-  if (GetStorage().read("notificationForRouteOne") == null) {
-    GetStorage().write("notificationForRouteOne", false);
-  }
-  if (GetStorage().read("notificationForRouteTwo") == null) {
-    GetStorage().write("notificationForRouteTwo", false);
-  }
-  if (GetStorage().read("notificationForRouteThree") == null) {
-    GetStorage().write("notificationForRouteThree", false);
-  }
+  GetStorage().read("notificationForRouteOne") ??
+      GetStorage().write("notificationForRouteOne", false);
+
+  GetStorage().read("notificationForRouteTwo") ??
+      GetStorage().write("notificationForRouteTwo", false);
+  GetStorage().read("notificationForRouteThree") ??
+      GetStorage().write("notificationForRouteThree", false);
+
+  GetStorage().read("timeForRouteOne") ??
+      GetStorage().write("timeForRouteOne", 10);
+
+  GetStorage().read("timeForRouteTwo") ??
+      GetStorage().write("timeForRouteTwo", 10);
+
+  GetStorage().read("timeForRouteThree") ??
+      GetStorage().write("timeForRouteThree", 10);
+  GetStorage().write("BusSchedulePageIndex", 0);
+  GetStorage().write("isEnlarged", false);
+  GetStorage().write("tabIndex", 0);
 
   final NotificationAppLaunchDetails? notificationAppLaunchDetails = !kIsWeb &&
           Platform.isLinux
@@ -97,7 +107,7 @@ Future<void> main() async {
   }
 
   const AndroidInitializationSettings initializationSettingsAndroid =
-      AndroidInitializationSettings('@mipmap/launcher_icon');
+      AndroidInitializationSettings('@mipmap/ic_stat_bu_logo');
 
   const InitializationSettings initializationSettings = InitializationSettings(
     android: initializationSettingsAndroid,

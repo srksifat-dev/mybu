@@ -12,20 +12,32 @@ final StateProvider<bool> providerOfNotificationForRouteTwo = StateProvider(
 final StateProvider<bool> providerOfNotificationForRouteThree = StateProvider(
     (ref) => GetStorage().read("notificationForRouteThree") ?? false);
 
+final StateProvider<int> providerOfTimeForRouteOne =
+    StateProvider((ref) => GetStorage().read("timeForRouteOne") ?? 10);
+
+final StateProvider<int> providerOfTimeForRouteTwo =
+    StateProvider((ref) => GetStorage().read("timeForRouteTwo") ?? 10);
+
+final StateProvider<int> providerOfTimeForRouteThree =
+    StateProvider((ref) => GetStorage().read("timeForRouteThree") ?? 10);
+
 class NewNotificationController {
   final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
       FlutterLocalNotificationsPlugin();
 
-  Future<void> scheduleNotification(List<Schedule> schedules) async {
+  Future<void> scheduleNotification(
+      List<Schedule> schedules, int subtractedTime) async {
     for (Schedule schedule in schedules) {
       tz.TZDateTime nextInstanceOfTime() {
         final tz.TZDateTime now = tz.TZDateTime.now(tz.local);
         tz.TZDateTime scheduledDate = tz.TZDateTime(tz.local, now.year,
             now.month, now.day, schedule.hour!, schedule.minute!);
-        if (scheduledDate.isBefore(now)) {
-          scheduledDate = scheduledDate.add(const Duration(days: 1));
-        }
-        return scheduledDate.subtract(const Duration(minutes: 10));
+          while (scheduledDate.weekday == DateTime.friday ||
+              scheduledDate.weekday == DateTime.saturday || scheduledDate.isBefore(now)) {
+                  scheduledDate = scheduledDate.add(const Duration(days: 1));
+            
+          }
+        return scheduledDate.subtract(Duration(minutes: subtractedTime));
       }
 
       await flutterLocalNotificationsPlugin.zonedSchedule(
@@ -44,7 +56,8 @@ class NewNotificationController {
                   ? "From Campus ${schedule.routeNo}"
                   : "To Campus ${schedule.routeNo}",
               channelDescription: "Bus notification",
-              icon: "@mipmap/launcher_icon",
+              icon: "@mipmap/ic_stat_bu_logo",
+              enableLights: true,
               importance: Importance.max,
             ),
           ),

@@ -51,13 +51,13 @@ dependencies:
   cloud_firestore: ^4.4.2
   flutter_switch: ^0.3.2
   flutter_neumorphic: ^3.2.0
-  shared_preferences: ^2.0.17
-  device_info_plus: ^8.1.0
   flutter_timezone: ^1.0.4
   http: ^0.13.5
   timezone: ^0.9.1
   percent_indicator: ^4.2.3
   permission_handler: ^10.2.0
+  internet_connection_checker: ^1.0.0+1
+  flutter_swipe_detector: ^2.0.0
 
 dev_dependencies:
   flutter_test:
